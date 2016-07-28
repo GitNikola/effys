@@ -1,0 +1,4110 @@
+<!-------------------------------------------------------------------------ˇ
+
+Name: parsesmf
+
+Description:
+	This Texis Vortex script
+
+Usage:
+	c:\inetpub\scripts\texis scriptname
+
+History:
+	Al Itchon, 1/30/02  Created
+
+Program was Created by:
+	Al Itchon
+	Source One Solutions, Inc.
+	http://www.source1solutions.com
+
+--------------------------------------------------------------------------->
+<script language=vortex>
+<uses bbsrex gethtml checkdate insertpost>
+
+<a name=smfparseposts export threadbody insertedthreadid forumid siteid urlthreadid basethreadurl=''
+	link linktosite hotlink sitealias siteurl bbstype bbsver threadtitle forumlastcrawled
+	lang cacheposts forumname daysbacktocrawl forumurl sitetitle charset firstpage
+	gmt='' adult=0 country='' backwardsthread=0 domain='' registrationdateformatid=''
+	hasuniquesitepostid=0 feedsources='' sitetopic='' forumcategories='' forumtopics=''
+	providerid=''
+	parsemethod totalposts allposts=0 postsparsed timeformatid
+	dupsfound>
+	<$THREADBODY=$threadbody>
+	<$INSERTEDTHREADID=$insertedthreadid>
+	<$FORUMID=$forumid>
+	<$SITEID=$siteid>
+	<$URLTHREADID=$urlthreadid>
+	<$THREADURL=$link>
+	<$LINKTOSITE=$linktosite>
+	<$SITEALIAS=$sitealias>
+	<$SITEURL=$siteurl>
+	<$HOTLINK=$hotlink>
+	<$BBSTYPE=$bbstype>
+	<$BBSVER=$bbsver>
+	<$THREADTITLE=$threadtitle>
+	<$FORUMLASTCRAWLED=$forumlastcrawled>
+	<$LANG=$lang>
+	<$CACHEPOSTS=$cacheposts>
+	<$PARSEMETHOD=$parsemethod>
+	<$ORIGPARSEMETHOD=$parsemethod>
+	<$POSTSPARSED=$postsparsed>
+	<$TIMEFORMATID=$timeformatid>
+	<$FORUMNAME=$forumname>
+	<$DAYSBACKTOCRAWL=$daysbacktocrawl>
+	<$BASETHREADURL=$basethreadurl>
+	<sum "%s" "-" $DAYSBACKTOCRAWL " days">
+	<$MAXDAYS=$ret>
+	<$FORUMURL=$forumurl>
+	<$SITETITLE=$sitetitle>
+	<$CHARSET=$charset>
+	<$FIRSTPAGE=$firstpage>
+	<$GMT=$gmt>
+	<$ADULT=$adult>
+	<$COUNTRY=$country>
+	<$REGISTRATIONDATEFORMATID=$registrationdateformatid>
+	<$HASUNIQUESITEPOSTID=$hasuniquesitepostid>
+	<$FEEDSOURCES=$feedsources>
+	<$SITETOPIC=$sitetopic>
+	<$FORUMCATEGORIES=$forumcategories>
+	<$FORUMTOPICS=$forumtopics>
+	<$PROVIDERID=$providerid>
+	<!-- don't keep alt text from images -->
+	<urlcp alttxt no>
+	<!-- initialize order to 1 for posts -->
+	<$POSTORDER=1>
+	<!-- parse posts -->
+	<$POSTSCNT=0>
+	<$ALLPOSTSCNT=0>
+	<$DUPSFOUND=0>
+	<parsebody>
+	<$parsemethod=$PARSEMETHOD>
+	<$totalposts=$POSTSCNT>
+	<$allposts=$ALLPOSTSCNT>
+	<$postsparsed=$POSTSPARSED>
+	<$timeformatid=$TIMEFORMATID>
+	<$dupsfound=$DUPSFOUND>
+</a>
+
+<a name=parsebody private>
+	<$posttable=>
+	<$tablelevel=0>
+	<$invalidfound=0>
+	<$pagehasmarker=0>
+	<$POSTSPARSED=0>
+	<!-------
+		method-hardcoding; one site - one method.
+	--------->
+	<rex '>>http=s?\://\P=!/+' $THREADURL >
+	<$SITEDOMAIN=$ret>
+	<$TEST_DEBUG_LOCAL=0>
+	<$TEST_DEBUG=0>
+	<if $TEST_DEBUG eq 1>
+		<testall_debug>
+		<return>
+	</if>
+	<if $SITEDOMAIN eq 'darkreign40k.com'>
+		<parsemethod8 textdata=$THREADBODY>
+		<return>
+	<elseif $SITEDOMAIN eq 'www.cracked.com' or $SITEDOMAIN eq 'themomblogs.com'
+		OR $SITEDOMAIN eq 'www.tmobileg1forum.com' or $SITEDOMAIN eq 'www.agrar.de'
+		OR $SITEDOMAIN eq 'www.vaasalaisia.info' OR $SITEDOMAIN eq 'fx-knight.com'
+		OR $SITEDOMAIN eq 'polarisrangerforum.com' OR $SITEDOMAIN eq 'forums.louisvilleghs.com'
+		OR $SITEDOMAIN eq 'www.spaargids.be' OR $SITEDOMAIN eq 'foro.portalhacker.net'
+		OR $SITEDOMAIN eq 'foros.consolas.com' OR $SITEDOMAIN eq 'www.granddink.com'
+		OR $SITEDOMAIN eq 'www.offtopicalia.com'
+		OR $SITEDOMAIN eq 'www.ultimonivel.net'
+		OR $SITEDOMAIN eq 'forums.wineography.com' OR $SITEDOMAIN eq 'www.mbcnsw.org.au'
+		OR $SITEDOMAIN eq 'get-up-and-go.com' OR $SITEDOMAIN eq 'backyardtheater.com'
+		OR $SITEDOMAIN eq 'forum.pfsense.org' OR $SITEDOMAIN eq 'www.tv-links.eu'
+		OR $SITEDOMAIN eq 'sfcu.com.au' OR $SITEDOMAIN eq 'www.urdulife.com'
+		OR $SITEDOMAIN eq 'www.esakhelvi.com' OR $SITEDOMAIN eq 'www.ysapak.com'
+		OR $SITEDOMAIN eq 'free-minds.org' OR $SITEDOMAIN eq 'www.advancedqtp.com'
+		OR $SITEDOMAIN eq 'www.pitbullforum.se' OR $SITEDOMAIN eq 'www.landgangen.se'
+		OR $SITEDOMAIN eq 'www.foretagande.se'
+		OR $SITEDOMAIN eq 'www.retroforum.se' OR $SITEDOMAIN eq 'forum.landdistrikterne.dk'
+		OR $SITEDOMAIN eq 'www.conservativecave.com' OR $SITEDOMAIN eq 'www.foro.todomecanica.com'
+		OR $SITEDOMAIN eq 'gsm-forum.nl' OR $SITEDOMAIN eq 'www.motorz.tv'
+		OR $SITEDOMAIN eq "www.atlanticz.ca" OR $SITEDOMAIN eq 'www.canadiandriver.com'
+		OR $SITEDOMAIN eq 'www.it-netsoc.ie' OR $SITEDOMAIN eq 'www.ligagame.com'
+		OR $SITEDOMAIN eq 'genclik.gen.tr' OR $SITEDOMAIN eq 'www.paylashocam.com'
+		OR $SITEDOMAIN eq 'life-sciences-forums.com' OR $SITEDOMAIN eq 'forum.blog.rs'
+		OR $SITEDOMAIN eq 'www.tokol.de' OR $SITEDOMAIN eq 'www.vatersein.de'
+		OR $SITEDOMAIN eq 'forum.prisonplanet.com' OR $SITEDOMAIN eq 'www.coeliakieforum.nl'
+		OR $SITEDOMAIN eq 'www.argim.org' OR $SITEDOMAIN eq 'www.helium.com'
+		OR $SITEDOMAIN eq 'forums.france24.com' OR $SITEDOMAIN eq 'www.technic3d.com'
+		OR $SITEDOMAIN eq 'www.liveatc.net' OR $SITEDOMAIN eq 'www.telefonanlagenforum.de'
+		OR $SITEDOMAIN eq 'tvparadies.net' or $SITEDOMAIN eq 'www.dogsfriendly.be'
+		OR $SITEDOMAIN eq 'forum.gratiz.be' OR $SITEDOMAIN eq 'forum.merelbeke.net'
+		OR $SITEDOMAIN eq 'forum.ka-news.de' or $SITEDOMAIN eq 'www.psoriasis-help.org.uk'
+		or $SITEDOMAIN eq 'www.msforum.dk'
+		or $SITEDOMAIN eq 'forums.thingamablog.com' or $SITEDOMAIN eq 'www.einsuranceforums.com'
+		or $SITEDOMAIN eq 'www.latestbingobonuses.com' or $SITEDOMAIN eq 'www.areopago.eu'
+		or $SITEDOMAIN eq 'forocistierna.es' or $SITEDOMAIN eq 'www.desdeunlugarmejor.com'
+		or $SITEDOMAIN eq 'foro.seguridadwireless.net' or $SITEDOMAIN eq 'foroscastilla.org'
+		or $SITEDOMAIN eq 'www.emoneyspace.com' or $SITEDOMAIN eq 'www.tomadivx.org'
+		or $SITEDOMAIN eq 'www.thecore.es' or $SITEDOMAIN eq 'www.as-fas.es' or $SITEDOMAIN eq 'www.aepic.es'
+		or $SITEDOMAIN eq 'www.gradoadeuned.com' or $SITEDOMAIN eq 'www.debatimos.com'
+		or $SITEDOMAIN eq 'www.byggebolig.no' or $SITEDOMAIN eq 'forum.maistrafego.pt'
+		or $SITEDOMAIN eq 'www.forumfotografia.net' or $SITEDOMAIN eq 'www.oplossing.be'
+		or $SITEDOMAIN eq 'www.playmofriends.com' or $SITEDOMAIN eq 'www.playclicks.com'
+		or $SITEDOMAIN eq 'chevyavalanchefanclub.com' or $SITEDOMAIN eq 'www.jagplanet.com'
+		or $SITEDOMAIN eq 'www.omegaowners.com' or $SITEDOMAIN eq 'www.chefduzen.de'
+		or $SITEDOMAIN eq 'board.siamha.com' or $SITEDOMAIN eq 'www.bogotaracingteam.com'
+		or $SITEDOMAIN eq 'www.onconocimiento.net' or $SITEDOMAIN eq 'mscare.org'
+		or $SITEDOMAIN eq 'forum.free2talk.de' or $SITEDOMAIN eq 'www.iform.no'
+		or $SITEDOMAIN eq 'forofemenino.hola.com' or $SITEDOMAIN eq 'www.tuerkei-hotline.de'
+		or $SITEDOMAIN eq 'www.pizzamaking.com' or $SITEDOMAIN eq 'endofinnocence.altervista.org'
+		or $SITEDOMAIN eq 'kopworld.net' or $SITEDOMAIN eq 'foro.telecelu.com'
+		or $SITEDOMAIN eq 'foro.andronautas.com' or $SITEDOMAIN eq 'forum.weblamp.net'
+		or $SITEDOMAIN eq 'forum.krasnet.ru' or $SITEDOMAIN eq 'www.all-kursk.ru'
+		or $SITEDOMAIN eq 'forum.murman.ru' or $SITEDOMAIN eq 'www.truquesedicas.com'
+		or $SITEDOMAIN eq 'www.sharewealthsystems.com' or $SITEDOMAIN eq 'makecool.ru'
+		or $SITEDOMAIN eq 'www.kostky.org' or $SITEDOMAIN eq 'forum.calgaryjeep.com' or $SITEDOMAIN eq 'www.clubscmm.com'
+		or $SITEDOMAIN eq 'www.usminiclub.us' or $SITEDOMAIN eq 'diskuse.elektrika.cz'
+		or $SITEDOMAIN eq 'ceedclub.ru' or $SITEDOMAIN eq 'www.crz-craze.com'
+		or $SITEDOMAIN eq 'caddychat.com' or $SITEDOMAIN eq 'www.iqcolony.com' or $SITEDOMAIN eq 'www.terrainforum.net'
+		or $SITEDOMAIN eq 'www.hpvinfo.ru' or $SITEDOMAIN eq 'www.7gy.ru' or $SITEDOMAIN eq 'www.stomport.ru'
+		or $SITEDOMAIN eq 'forum.rostovmama.ru' or $SITEDOMAIN eq 'forum.crvclub.ru' or $SITEDOMAIN eq 'www.daewoo-park.ru'
+		or $SITEDOMAIN eq 'mama51.ru' or $SITEDOMAIN eq 'novajeepers.net' or $SITEDOMAIN eq 'www.hummerclub.com.ua'
+		or $SITEDOMAIN eq 'www.agrarweb.at' or $SITEDOMAIN eq 'www.agrowissen.de' or $SITEDOMAIN eq 'tacuma.com.ua'
+		or $SITEDOMAIN eq 'koltushi.org' or $SITEDOMAIN eq 'www.momschoose.ru' or $SITEDOMAIN eq 'www.equinoxforum.net'
+		or $SITEDOMAIN eq 'www.getbig.com' or $SITEDOMAIN eq 'www.tig.org.za' or $SITEDOMAIN eq 'bitcointalk.org'
+		or $SITEDOMAIN eq 'www.cerato-club.ru' or $SITEDOMAIN eq 'retro.dn.ua' or $SITEDOMAIN eq 'ubuntuforum-br.org'
+		or $SITEDOMAIN eq 'baby.dn.ua' or $SITEDOMAIN eq 'deti74.ru' or $SITEDOMAIN eq 'www.konura.info'
+		or $SITEDOMAIN eq 'youngparents.msk.ru' or $SITEDOMAIN eq 'gripevines.com'
+		or $SITEDOMAIN eq 'www.skodacroatia.com' or $SITEDOMAIN eq 'www.nmwl.no' or $SITEDOMAIN eq 'syktforum.ru'
+		or $SITEDOMAIN eq 'hlebopechka.ru' or $SITEDOMAIN eq 'www.teknikportal.com' or $SITEDOMAIN eq 'www.thaithinkpad.com'
+		or $SITEDOMAIN eq 'reader-test.sr'>
+		<parsemethod6 textdata=$THREADBODY>
+		<return>
+	<elseif $SITEDOMAIN eq 'smf.rcw.ms' OR $SITEDOMAIN eq 'www.pennystocksignals.com'
+		OR $SITEDOMAIN eq 'canada355.com' OR $SITEDOMAIN eq 'www.smokey-services.eu' or $SITEDOMAIN eq 'forum.domohozyaika.com'>
+		<parsemethod9 textdata=$THREADBODY>
+		<return>
+	<elseif $SITEDOMAIN eq 'waronyou.com' or $SITEDOMAIN eq 'www.pakstudy.com' or $SITEDOMAIN eq 'www.rootschat.com'
+		OR $SITEDOMAIN eq 'forum.dailymobile.se' OR $SITEDOMAIN eq 'www.egitim-forum.com'
+		OR $SITEDOMAIN eq 'forum.toyota-allion.ru' OR $SITEDOMAIN eq 'forum.passioneauto.it'
+		OR $SITEDOMAIN eq 'www.satellite-audiovideo.com' OR $SITEDOMAIN eq 'www.go-android.de'
+		OR $SITEDOMAIN eq 'www.cogknowhow.com' OR $SITEDOMAIN eq 'www.creadoo.com'>
+		<parsemethod3 textdata=$THREADBODY>
+		<return>
+	<elseif $SITEDOMAIN eq 'www.forofocus.com' or $SITEDOMAIN eq 'swfloridafishingforum.com'
+		OR $SITEDOMAIN eq 'www.board-express.com' OR $SITEDOMAIN eq 'www.go-windows.de'
+		OR $SITEDOMAIN eq 'forum.leben-mit-ms.de' OR $SITEDOMAIN eq 'www.masquechicos.com'
+		OR $SITEDOMAIN eq 'www.ratrodnation.com' OR $SITEDOMAIN eq 'forum.vatan.tc'
+		or $SITEDOMAIN eq 'www.mejorenvo.com' or $SITEDOMAIN eq 'www.furgovw.org'
+		or $SITEDOMAIN eq 'foro.tiempo.com' or $SITEDOMAIN eq 'www.descargaya.es'
+		or $SITEDOMAIN eq 'foros.elle.es'  or $SITEDOMAIN eq 'www.portalhacker.net'
+		or $SITEDOMAIN eq 'foro.diariocritico.com' or $SITEDOMAIN eq 'www.foroche.com'
+		or $SITEDOMAIN eq 'www.basso.fi' or $SITEDOMAIN eq 'www.bundeswehrforum.de'
+		or $SITEDOMAIN eq 'foro.tuning-on.com' or $SITEDOMAIN eq 'hommaforum.org'
+		or $SITEDOMAIN eq 'www.cyclingtopics.com' or $SITEDOMAIN eq 'forum.mesec.cz'
+		or $SITEDOMAIN eq 'www.helpwebhosting.com' or $SITEDOMAIN eq 'forum.mercatinosim.org'
+		or $SITEDOMAIN eq 'expressionwebforum.com' or $SITEDOMAIN eq 'forum.freenews.fr'
+		or $SITEDOMAIN eq 'www.svetecigaret.cz' or $SITEDOMAIN eq 'forum.vitalia.cz'
+		or $SITEDOMAIN eq 'forum.podnikatel.cz' or $SITEDOMAIN eq 'www.forum.clubvolvoitalia.it'
+		or $SITEDOMAIN eq 'brzytwa.org' or $SITEDOMAIN eq 'rexik.zoznam.sk'  or $SITEDOMAIN eq 'forum.ostrow24.tv'
+		or $SITEDOMAIN eq 'www.zukiworld.com' or $SITEDOMAIN eq 'forums.poz.com' or $SITEDOMAIN eq 'www.oknamedia.ru'
+		or $SITEDOMAIN eq 'forum.imoneybank.ru' or $SITEDOMAIN eq 'www.teplos.net' or $SITEDOMAIN eq 'forum.rost-okna.ru'
+		or $SITEDOMAIN eq 'www.prado-club.su' or $SITEDOMAIN eq 'dpk.itc.ua' or $SITEDOMAIN eq 'forum.myflat.by'
+		or $SITEDOMAIN eq 'rebenok.by' or $SITEDOMAIN eq 'netobzor.org' or $SITEDOMAIN eq 'shopoforum.ru'
+		or $SITEDOMAIN eq 'www.hobbyconsolas.com' or $SITEDOMAIN eq 'dodge-club.org.ua' or $SITEDOMAIN eq 'aveo.com.ua'
+		or $SITEDOMAIN eq 'www.toyota-club.com.ua' or $SITEDOMAIN eq 'www.myswag.org' or $SITEDOMAIN eq 'forza-club.org.ua'
+		or $SITEDOMAIN eq 'www.nuggetoutdoors.com.au' or $SITEDOMAIN eq 'forum.detiangeli.ru' or $SITEDOMAIN eq 'buy-club.ru'
+		or $SITEDOMAIN eq 'toyota-lc.ru' or $SITEDOMAIN eq 'forum-toyota.ru' or $SITEDOMAIN eq 'forum.b-m-w.ru'
+		or $SITEDOMAIN eq 'www.corsa-club.net' or $SITEDOMAIN eq 'forum.avto-dio.ru' or $SITEDOMAIN eq 'forum55.ru'
+		or $SITEDOMAIN eq '38mama.ru' or $SITEDOMAIN eq 'automir.dp.ua' or $SITEDOMAIN eq 'www.schwanger-online.de'
+		or $SITEDOMAIN eq 'farmnest.com' or $SITEDOMAIN eq 'forum.alternatifim.com' or $SITEDOMAIN eq 'betonbasket.ru'
+		or $SITEDOMAIN eq 'forum.club-magentis.ru' or $SITEDOMAIN eq 'www.mamask.ru' or $SITEDOMAIN eq 'minorityforum.ru'
+		or $SITEDOMAIN eq 'gelandewagen.org' or $SITEDOMAIN eq 'www.forum.fordmpv.com' or $SITEDOMAIN eq 'www.benzobuddies.org'
+		or $SITEDOMAIN eq 'forum.sekswoordenboek.nl' or $SITEDOMAIN eq 'www.cocktaildreams.de' or $SITEDOMAIN eq 'medpred.ru'
+		or $SITEDOMAIN eq 'ilgiliforum.com' or $SITEDOMAIN eq 'www.birtydastards.com' or $SITEDOMAIN eq 'forococheselectricos.com'
+		or $SITEDOMAIN eq 'www.alfistas.es' or $SITEDOMAIN eq 'www.captiva-club.com' or $SITEDOMAIN eq 'thailandtrailblazerclub.com'
+		or $SITEDOMAIN eq 'chevysonic-club.com' or $SITEDOMAIN eq 'forum.domidrewno.pl' or $SITEDOMAIN eq 'www.chiefmotorcycleforum.com'
+		or $SITEDOMAIN eq 'gyroscopicinvesting.com' or $SITEDOMAIN eq 'www.ecovidnoe.com' or $SITEDOMAIN eq 'forum.nasaspaceflight.com'
+		or $SITEDOMAIN eq 'atarnotes.com' or $SITEDOMAIN eq 'www.thaidellclub.com' or $SITEDOMAIN eq 'www.jeepowners.club'
+		or $SITEDOMAIN eq 'www.memoflores.com' or $SITEDOMAIN eq 'kvartiradin.ru' or $SITEDOMAIN eq 'www.forum.e-mebel.net' 
+		or $SITEDOMAIN eq 'forum.girlscene.nl'>
+		<parsemethod11 textdata=$THREADBODY>
+		<return>
+	<elseif $SITEDOMAIN eq 'www.redandwhitekop.com' OR $SITEDOMAIN eq 'darkforestgroup.com'
+		OR $SITEDOMAIN eq 'www.svenskamord.se' OR $SITEDOMAIN eq 'www.candymag.com'
+		OR $SITEDOMAIN eq 'www.esaonline.co.za' OR $SITEDOMAIN eq 'www.lawschooldiscussion.org'
+		OR $SITEDOMAIN eq 'www.purrsinourhearts.co.uk' OR $SITEDOMAIN eq 'www.detroitiscrap.com'
+		OR $SITEDOMAIN eq 'www.blackberry.gen.tr' OR $SITEDOMAIN eq 'forum.netenviesdebebes.com'
+		OR $SITEDOMAIN eq 'www.villakunterbunt.ws' or $SITEDOMAIN eq 'www.mvisioneros.com'
+		or $SITEDOMAIN eq 'www.lacomunateleco.com' or $SITEDOMAIN eq 'www.talkhuntin.com'
+		or $SITEDOMAIN eq 'www.vzlafta.com' or $SITEDOMAIN eq 'hcvshare.org' or $SITEDOMAIN eq 'hcvsupport.org'
+		or $SITEDOMAIN eq 'keskustelu.diabetes.fi' or $SITEDOMAIN eq 'keskustelukanava.agronet.fi'
+		or $SITEDOMAIN eq 'www.cognoise.com' or $SITEDOMAIN eq 'politiskforum.no'
+		or $SITEDOMAIN eq 'freedatingforums.com' or $SITEDOMAIN eq 'www.marriagesherpa.com'
+		or $SITEDOMAIN eq 'www.bbsex.org' or $SITEDOMAIN eq 'www.wildfisher.co.uk'
+		or $SITEDOMAIN eq 'diabetes-support.org.uk' or $SITEDOMAIN eq 'forums.tmonews.com'
+		or $SITEDOMAIN eq 'indoreefclub.com' or $SITEDOMAIN eq 'www.golfgtiforum.co.uk'
+		or $SITEDOMAIN eq 'www.sellersarena.com' or $SITEDOMAIN eq 'www.canonrumors.com' or $SITEDOMAIN eq 'forvol.ru'
+		or $SITEDOMAIN eq 'zukiworld.com' or $SITEDOMAIN eq 'www.chevyavalancheclub.com' or $SITEDOMAIN eq 'kroufr.ru'
+		or $SITEDOMAIN eq 'www.timesharetalk.co.uk' or $SITEDOMAIN eq 'www.cuda-challenger.com'
+		or $SITEDOMAIN eq 'www.fertilityfriends.co.uk' or $SITEDOMAIN eq 'www.etiquettehell.com'
+		or $SITEDOMAIN eq 'sguforums.com' or $SITEDOMAIN eq 'www.kneeguru.co.uk' or $SITEDOMAIN eq 'www.babywhispererforums.com'
+		or $SITEDOMAIN eq 'www.forum.vitiligosociety.org.uk' or $SITEDOMAIN eq 'forums.hepmag.com'
+		or $SITEDOMAIN eq 'forum.avast.com' or $SITEDOMAIN eq 'forum.autogespot.com' or $SITEDOMAIN eq 'www.allaboutdogfood.co.uk'
+		or $SITEDOMAIN eq 'www.anxietyzone.com' or $SITEDOMAIN eq 'www.gendersupport.org' or $SITEDOMAIN eq 'ioplist.com'
+		or $SITEDOMAIN eq 'mitelforums.com' or $SITEDOMAIN eq 'www.susans.org' or $SITEDOMAIN eq 'clubzafira.com'
+		or $SITEDOMAIN eq 'www.ihcworld.com' or $SITEDOMAIN eq 'www.mandrivabrasil.org' or $SITEDOMAIN eq 'naaminis.com'
+		or $SITEDOMAIN eq 'ringo.net' or $SITEDOMAIN eq 'www.thetechforum.co.uk' or $SITEDOMAIN eq 'talk.uk-yankee.com'
+		or $SITEDOMAIN eq 'thesocieties.net' or $SITEDOMAIN eq 'www.laviedenosanimaux.com' or $SITEDOMAIN eq 'forum.pinoypc.net'>
+		<parsemethod10 textdata=$THREADBODY>
+		<return>
+	<elseif $SITEDOMAIN eq 'forum.tuttogratis.it'>
+		<parsemethod12 textdata=$THREADBODY>
+		<return>
+	<elseif $SITEDOMAIN eq 'www.pinoyden.com.ph'>
+		<parsemethod13 textdata=$THREADBODY>
+		<return>
+	<elseif $SITEDOMAIN eq 'www.schwarzer-markt.net'>
+		<parsemethod14 textdata=$THREADBODY>
+		<return>
+	<elseif $SITEDOMAIN matches '%.sanook.com'>
+		<parsemethod15 textdata=$THREADBODY>
+		<if $POSTSPARSED eq 0>
+			<parsemethod16 textdata=$THREADBODY>
+		</if>
+		<return>
+	<elseif $SITEDOMAIN eq 'forum.pravda.com.ua'>
+		<parsemethod17 textdata=$THREADBODY>
+		<return>
+	</if>
+	<if $PARSEMETHOD gt 0>
+		<switch $PARSEMETHOD>
+			<case 1>
+				<parsemethod1 textdata=$THREADBODY>
+			<case 2>
+				<parsemethod2 textdata=$THREADBODY>
+			<case 3>
+				<parsemethod3 textdata=$THREADBODY>
+			<case 4>
+				<parsemethod4 textdata=$THREADBODY>
+			<case 5>
+				<parsemethod5 textdata=$THREADBODY>
+			<case 6>
+				<parsemethod6 textdata=$THREADBODY>
+			<case 7>
+				<parsemethod7 textdata=$THREADBODY>
+			<case 9>
+				<parsemethod9 textdata=$THREADBODY>
+			<case 10>
+				<parsemethod10 textdata=$THREADBODY>
+			<case 11>
+				<parsemethod11 textdata=$THREADBODY>
+			<case 12>
+				<parsemethod12 textdata=$THREADBODY>
+			<case 13>
+				<parsemethod13 textdata=$THREADBODY>
+			<case 14>
+				<parsemethod14 textdata=$THREADBODY>
+			<case 15>
+				<parsemethod15 textdata=$THREADBODY>
+			<case 16>
+				<parsemethod16 textdata=$THREADBODY>
+			<case 17>
+				<parsemethod17 textdata=$THREADBODY>
+		</switch>
+	</if>
+	<if $POSTSPARSED eq 0>
+		<parsemethod1 textdata=$THREADBODY>
+		<if $POSTSPARSED eq 0>
+			<parsemethod2 textdata=$THREADBODY>
+			<if $POSTSPARSED eq 0>
+				<parsemethod6 textdata=$THREADBODY>
+				<if $POSTSPARSED eq 0>
+					<parsemethod3 textdata=$THREADBODY>
+					<if $POSTSPARSED eq 0>
+						<parsemethod4 textdata=$THREADBODY>
+						<if $POSTSPARSED eq 0>
+							<parsemethod5 textdata=$THREADBODY>
+							<if $POSTSPARSED eq 0>
+								<parsemethod7 textdata=$THREADBODY>
+								<if $POSTSPARSED eq 0>
+									<parsemethod9 textdata=$THREADBODY>
+									<if $POSTSPARSED eq 0>
+										<parsemethod10 textdata=$THREADBODY>
+										<if $POSTSPARSED eq 0><parsemethod11 textdata=$THREADBODY></if>
+										<if $POSTSPARSED eq 0><parsemethod12 textdata=$THREADBODY></if>
+										<if $POSTSPARSED eq 0><parsemethod13 textdata=$THREADBODY></if>
+										<if $POSTSPARSED eq 0><parsemethod14 textdata=$THREADBODY></if>
+										<if $POSTSPARSED eq 0><parsemethod15 textdata=$THREADBODY></if>
+										<if $POSTSPARSED eq 0><parsemethod16 textdata=$THREADBODY></if>
+										<if $POSTSPARSED eq 0><parsemethod17 textdata=$THREADBODY></if>
+									</if>
+								</if>
+							</if>
+						</if>
+					</if>
+				</if>
+			</if>
+		</if>
+	</if>
+</a>
+
+<a name=testall_debug>
+=== METHOD 1 ====================================================
+=== METHOD 1 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod1 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 2 ====================================================
+=== METHOD 2 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod2 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 3 ====================================================
+=== METHOD 3 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod3 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 4 ====================================================
+=== METHOD 4 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod4 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 5 ====================================================
+=== METHOD 5 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod5 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 6 ====================================================
+=== METHOD 6 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod6 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 7 ====================================================
+=== METHOD 7 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod7 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 8 ====================================================
+=== METHOD 8 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod8 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 9 ====================================================
+=== METHOD 9 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod9 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 10 ====================================================
+=== METHOD 10 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod10 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 11 ====================================================
+=== METHOD 11 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod11 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 12 ====================================================
+=== METHOD 12 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod12 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 13 ====================================================
+=== METHOD 13 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod13 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 14 ====================================================
+=== METHOD 14 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod14 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 15 ====================================================
+=== METHOD 15 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod15 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 16 ====================================================
+=== METHOD 16 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod16 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== METHOD 17 ====================================================
+=== METHOD 17 ====================================================
+<$TEST_DEBUG_LOCAL=1>
+	<parsemethod17 textdata=$THREADBODY>
+POSTSCNT=$POSTSCNT
+=== END PAGE ====================================================
+=== END PAGE ====================================================
+</a>
+
+<a name=parsemethod1 private textdata>
+method1
+	<domain_blocker callingmethod='1' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '>><a\spacename\="msg=!<a\spacename\="msg+' $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<getanchor data=$postdata>
+		<$posttable=>
+		<rex '<table=!<table+>><span\spacestyle\="font\-size:\spacex\-small;"><b>#=.+' $postdata>
+		<gettables data=$ret tables=$&tables>
+		<loop max=2 $tables>
+			<if $next eq 1>
+				<$posttable=$tables>
+			<elseif $next eq 2>
+				<$postbodytable=$tables>
+			</if>
+		</loop>
+		<rex row '<a\space=!<a\space+>>action\=profile=!</a>+</a>' $postdata>
+			<$linkdata=$ret>
+			<fetch $THREADURL $linkdata>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<if $author ne "">
+				<urllinks>
+				<loop max=1 $ret>
+					<$authorurl=$ret>
+				</loop>
+				<break>
+			</if>
+		</rex>
+		<rex '>><span\spacestyle\="font\-size:\spacex\-small;=.+' $posttable>
+		<getspans data=$ret spans=$&spans>
+		<loop max=1 $spans>
+			<rex ">\P=.+" $spans>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$lastpostdate=$ret>
+			<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		</loop>
+		<getcells data=$postbodytable cells=$&cells>
+		<loop max=2 $cells>
+			<if $next eq 2>
+				<rex ">\P=.+" $cells>
+				<$htmlbody=$ret>
+				<fetch localhost/index.html $htmlbody>
+				<urltext>
+				<$postbody=$ret>
+				<removequotes bodydata=$postbody bodynoquotes=$&bodynoquotes>
+			</if>
+		</loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter  signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=1>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod2 private textdata>
+method2
+	<domain_blocker callingmethod='2' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '>><a\spacename\="=!<table+<table=!<a\spacename\="+' $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<getanchor data=$postdata>
+		<$posttable=>
+		<gettables data=$postdata tables=$&tables>
+		<loop $tables>
+			<rex 'class\="postbit"' $tables>
+			<if $ret ne "">
+				<$posttable=$tables>
+				<break>
+			</if>
+		</loop>
+		<$postrow=>
+		<getrows data=$posttable rows=$&rows>
+		<loop max=1 $rows>
+			<$postrow=$rows>
+		</loop>
+		<getcells data=$postrow cells=$&cells>
+		<loop $cells>
+			<if $next eq 1>
+				<gettables data=$cells tables=$&tables>
+				<$authortable=>
+				<loop max=1 $tables>
+					<$authortable=$tables>
+				</loop>
+				<rex ">\P=.+" $authortable>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$author=$ret>
+				<trimmer inout=$&author>
+			<elseif $next eq 2>
+				<gettables data=$cells tables=$&tables>
+				<$datetable=>
+				<loop max=1 $tables>
+					<$datetable=$tables>
+				</loop>
+				<getcells data=$datetable cells=$&cells2>
+				<loop max=1 $cells2>
+					<rex ">\P=.+" $cells2>
+					<$coldata=$ret>
+					<fetch localhost/index.html $coldata>
+					<urltext>
+					<$lastpostdate=$ret>
+					<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+				</loop>
+				<rex '<div\spaceclass\="p_subject">\P=!</div+\F</div' $cells>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$posttitle=$ret>
+				<trimmer inout=$&posttitle>
+				<rex '<div\spaceclass\="postbody"\P=!</div+\F</div' $cells>
+				<rex ">\P=.+" $ret>
+				<$bodydata=$ret>
+				<$htmlbody=$bodydata>
+				<fetch localhost/index.html $htmlbody>
+				<urltext>
+				<$postbody=$ret>
+				<removequotes bodydata=$bodydata bodynoquotes=$&bodynoquotes>
+			</if>
+		</loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=2>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod6 private textdata>
+method6
+	<domain_blocker callingmethod='6' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<$rexloop=0>
+	<$mainrex = '>><a\spacename\="msg=!<a\spacename\="msg+' '>><a\spaceid\="msg=\digit+"=!<a\spaceid\="msg+' >
+	<if $SITEDOMAIN eq 'www.offtopicalia.com'>
+		<$mainrex = '<table=!<table+>><a\spacename\="msg=!<a\spacename\="msg+' >
+	</if>
+	<if $SITEDOMAIN eq 'www.desdeunlugarmejor.com'>
+		<$mainrex = '<table=!<.....+class\="catbg"=!class\="catbg"+>>id\="subject_=!id\="subject_+'>
+	</if>
+	<rex row $mainrex $textdata>
+		<$postdata=$ret>
+		<!--***************************
+		<send $postdata>
+
+		***************************-->
+		<clearpostrecbuffer>
+		<getanchor data=$postdata>
+		<if $SITEDOMAIN eq 'www.offtopicalia.com' or $SITEDOMAIN eq 'www.vatersein.de'>
+			<rex max=1 '>><a\spacename\="\P=msg=\digit+' $postdata></rex>
+			<$anchor=$ret>
+			<$originalpostdata=$postdata>
+		</if>
+		<if $SITEDOMAIN eq 'www.desdeunlugarmejor.com'>
+			<rex max=1 '>>id\="subject_\P=\digit+' $postdata></rex>
+			<if $ret neq ''>
+				<sum '%s' 'msg' $ret>
+				<$anchor=$ret>
+				<$originalpostdata=$postdata>
+			</if>
+		</if>
+		<if $SITEDOMAIN eq 'www.pizzamaking.com'>
+			<rex max=1 '>><a\spacename\="\P=msg=\digit+' $postdata></rex>
+			<$anchor=$ret>
+		</if>
+		<!-- this ain' gonna work:
+		<rex max=1 '>><td\spaceclass\="windowbg=.+' $postdata></rex>
+		there are examples where there is more than one <TD of a "windowbg" class.
+		first such cell we don't want to pick up because it's some header data, not the post content -->
+		<$temp=''>
+		<rex row '>><td\spaceclass\="windowbg=!<td\spaceclass\="windowbg+' $postdata>
+			<$temp=$ret>
+			<!-- this way we're collecting the last <TD> of desired class -->
+		</rex>
+		<if $SITEDOMAIN eq 'www.svenskamord.se' or $SITEDOMAIN eq 'forocistierna.es' or $SITEDOMAIN eq 'www.desdeunlugarmejor.com'
+			or $SITEDOMAIN eq 'www.gradoadeuned.com' or $SITEDOMAIN eq 'www.debatimos.com' or $SITEDOMAIN eq 'www.pizzamaking.com'
+			or $SITEDOMAIN eq 'forum.calgaryjeep.com' or $SITEDOMAIN eq 'caddychat.com' or $SITEDOMAIN eq 'www.iqcolony.com'>
+			<rex max=1 '>><td\spaceclass\="windowbg=.*' $postdata></rex>
+			<$temp=$ret>
+		</if>
+		<if $SITEDOMAIN eq 'ceedclub.ru'>
+			<rex max=1 '>><td\spaceclass\="windowbg[^\space]=.*' $postdata></rex>
+			<$temp=$ret>
+		</if>
+		<!-- pools in 'www.terrainforum.net', we have to skip "poll" & "advertisement" cell with class="windowbg to catch the 1st post on a page-->
+		<rex max=1 '>>_poll\.gif"' $postdata></rex>
+		<if $ret neq ''  and $SITEDOMAIN eq 'www.terrainforum.net' and  $rexloop eq 0 >
+			<rex row '>><td\spaceclass\="windowbg=[^3]=!<td\spaceclass\="windowbg+' $postdata>
+				<$temp=$ret>
+			</rex>
+		<else>
+			<rex max=1 '>><td\spaceclass\="windowbg=.*' $postdata></rex>
+			<$temp=$ret>
+		</if>
+		<$postdata=$temp>
+		<$postrow1=>
+		<getrows data=$postdata rows=$&rows>
+		<loop max=1 $rows>
+			<$postrow1=$rows>
+		</loop>
+		<if $postrow1 eq "">
+			<rex '<tr=!<tr+>>action\=profile=.+' $postdata>
+			<$postrow1=$ret>
+		</if>
+		<rex '>><div\spaceclass\="post"=.+' $postdata>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=1 $divs>
+			<rex ">\P=.+" $divs>
+			<$htmlbody=$ret>
+			<!-- clean-up and signature -->
+			<if $SITEDOMAIN eq 'foroscastilla.org'>
+				<sandr '>><div id\="share_this"=!</div>+</div>=!</div>*</div>=' '' $htmlbody>
+				<$htmlbody=$ret>
+			</if>
+			<if $SITEDOMAIN eq 'www.thecore.es'>
+				<sandr '<div =!<div +>>((Para ver los links))=!</div>+</div>=' '' $htmlbody>
+				<$htmlbody=$ret>
+			</if>
+			<sandr '<small><i>Sponsorlu Balant˝lar</i></small>' '' $htmlbody>
+			<$htmlbody=$ret>
+			<rex '>><br />_________________<br />\P=.+' $htmlbody>
+			<$signature=$ret>
+			<sandr '>><br />_________________<br />=.+' '' $htmlbody>
+			<$htmlbody=$ret>
+			<fetch localhost/index.html $htmlbody>
+			<urltext>
+			<$postbody=$ret>
+			<trimmer inout=$&postbody>
+			<removequotes bodydata=$bodydata bodynoquotes=$&bodynoquotes>
+		</loop>
+		<getcells data=$postrow1 cells=$&cells>
+		<loop $cells>
+			<$cellnext=$next>
+			<if $cellnext eq 1>
+				<rex '.+\F<div\spaceclass\="smalltext' $cells>
+				<rex row max=1 '>><a\space=!</a>+</a>=' $ret></rex>
+				<if $SITEDOMAIN eq 'www.svenskamord.se'>
+					<rex max=1 '<a\space=!<a\space+>>=' $ret></rex>
+				<elseif $SITEDOMAIN eq 'forum.maistrafego.pt'>
+					<rex max=1 '<a\space=!<a\space+>>class\="postername"=!</a>+</a>=' $postdata></rex>
+				<elseif $SITEDOMAIN eq 'forum.free2talk.de' or $SITEDOMAIN eq 'forum.rostovmama.ru'>
+					<rex max=1 '<a\space=!<a\space+>>\?action\=profile;u\==!</a>+</a>=' $postdata></rex>
+				</if>
+				<fetch $THREADURL $ret>
+				<urltext>
+				<$author=$ret>
+				<trimmer inout=$&author>
+				<if $author ne "">
+					<urllinks>
+					<$authorurl=$ret>
+				<else>
+					<rex ">\P=.+" $cells>
+					<rex '.+\F<div\spaceclass\="smalltext' $ret>
+					<fetch localhost/index.html $ret>
+					<urltext>
+					<$author=$ret>
+					<trimmer inout=$&author>
+					<if $author eq "">
+						<rex row max=1 '>><a\space=!</a>+</a>=' $cells></rex>
+						<fetch $THREADURL $ret>
+						<urltext>
+						<$author=$ret>
+						<trimmer inout=$&author>
+						<if $author ne "">
+							<urllinks>
+							<$authorurl=$ret>
+						</if>
+					</if>
+					<if $author eq "">
+						<rex row max=1 '>><b>\P=!</b>+' $cells></rex>
+						<!--<fetch $THREADURL $ret>
+						<urltext>-->
+						<$author=$ret>
+						<!--<trimmer inout=$&author>-->
+					</if>
+					<if $author eq "" and $SITEDOMAIN eq 'diskuse.elektrika.cz'>
+						<$author='Anonymous'>
+					</if>
+				</if>
+				<rex '>>Gender:\P=!<br+\F<br' $cells>
+				<$genderhtml=$ret>
+				<if $genderhtml eq "">
+					<$sexrex='>>Sesso:\P=!<br+\F<br' '>>Sexe:\P=!<br+\F<br' '>>Geschlecht:\P=!<br+\F<br'
+						'>>Sukupuoli:\P=!<br+\F<br' '>>Sexo:\P=!<br+\F<br' '>>Geslacht:\P=!<br+\F<br'
+						'>>Kˆn:=\space*<img\space=!>+>' '>>K&ouml;n:=\space*</b>?\space*<img\space=!>+>'
+						'>>K√∏n:=\space*<img\space=!>+>' '>>Kj&oslash;nn:\P=!<br+' '>>œÓÎ:\P=!<br+'
+						'>>–ü–æ–ª:\P=!<br+' '>>PohlavÌ:=\space*<img\space=!>+>'>
+					<rex $sexrex $cells>
+					<$genderhtml=$ret>
+				</if>
+				<if $SITEDOMAIN eq 'www.latestbingobonuses.com'>
+					<!-- check the whole cell -->
+					<$genderhtml=$cells>
+				</if>
+				<rex 'Female' $genderhtml>
+				<if $ret ne "">
+					<$gender="F">
+				<else>
+					<rex 'Male' $genderhtml>
+					<if $ret ne "">
+						<$gender="M">
+					</if>
+				</if>
+				<if $gender eq ''>
+					<rex 'images/\P=fe?male=\F\.gif"=' $genderhtml>
+					<if $ret eq 'female'>
+						<$gender="F">
+						<$genderfound=1>
+					<elseif $ret eq 'male'>
+						<$gender="M">
+						<$genderfound=1>
+					</if>
+				</if>
+				<$agerex='>>Age:\P=!<br+' '>>Al[dt]er:\P=!<br+' '>>Idade:\P=!<br+' '>>¬ÓÁ‡ÒÚ:\P=!<br+'>
+				<rex $agerex $cells>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$authorage=$ret>
+				<trimmer inout=$&authorage>
+				<rex '\digit+' $authorage>
+				<$authorage=$ret>
+				<$locrex= '>>LocalizaciÛn: \P=!<br+'    '>>Location:\P=!<br+' '>>Local:\P=!<br+' '>>Lugar:\P=!<br+'
+					'>>Herkunft:\P=!<br+' '>>–‡ÒÔÓÎÓÊÂÌËÂ:\P=!<br+' '>>Ort:\P=!<br+' '>>–û—Ç–∫—É–¥–∞:\P=!<br+'
+					'>>>–†–µ–≥–∏–æ–Ω</b>:\P=!<br+' '>>–ì–æ—Ä–æ–¥:\P=!<+' '>>√ÓÓ‰\P=!<+'>
+				<if $SITEDOMAIN eq 'www.foro.todomecanica.com' or $SITEDOMAIN eq 'www.as-fas.es'
+					or $SITEDOMAIN eq 'ceedclub.ru'>
+					<$locrex='<img=!<...+>>/images/flags/=!alt\="+alt\="\P=!"+'>
+				<elseif $SITEDOMAIN eq 'forum.dailymobile.se'>
+					<$locrex='>>Location:\P=!<br />+'>
+				<elseif $SITEDOMAIN eq 'www.paylashocam.com'>
+					<$locrex='>><span=!>*>=\space*Yer:=\space*</span>\P=!<+'>
+				<elseif $SITEDOMAIN eq 'www.byggebolig.no'>
+					<$locrex='>>Bosted:\P=!<br+'>
+				</if>
+				<rex $locrex $cells>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$authorloc=$ret>
+				<trimmer inout=$&authorloc>
+				<if $SITEDOMAIN eq 'ceedclub.ru' or $SITEDOMAIN eq 'www.daewoo-park.ru' or $SITEDOMAIN eq 'www.agrarweb.at'>
+					<rex '<img=!<...+>>/images/flags/=!>+>\P=!<+' $cells>
+					<fetch localhost/index.html $ret>
+					<urltext>
+					<$temp = $ret>
+					<trimmer inout=$&temp>
+					<sum '%s' $authorloc ' ' $temp>
+					<$authorloc=$ret>
+				</if>
+				<!-- AVATAR -->
+				<$avatarrex='<img=!<img+>>class\="avatar=!>+>=' '<img=!<img+>>/avatars/=!>+>='
+							'<img=!<img+>>/galleria/albums/userpics/=!>+>=' '<img=!<img+>>class\="avatar"=!>+>='>
+				<$avreject='no\-avatar\.jpg'>
+				<rex max=1 $avatarrex $cells></rex>
+				<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl reject=$avreject>
+			<elseif $cellnext eq 2>
+				<rex '<div=!<div+>>id\="subject_=.+' $cells>
+				<getdivs data=$ret divs=$&divs>
+				<loop max=1 $divs>
+					<rex ">\P=.+" $divs>
+					<fetch localhost/index.html $ret>
+					<urltext>
+					<$posttitle=$ret>
+					<trimmer inout=$&posttitle>
+				</loop>
+				<if $posttitle eq "">
+					<rex row '>><a\space=!</a>+</a>=' $cells>
+						<$htmllink=$ret>
+						<rex "#" $htmllink>
+						<if $ret ne "">
+							<fetch localhost/index.html $htmllink>
+							<urltext>
+							<$posttitle=$ret>
+							<trimmer inout=$&posttitle>
+							<if $posttitle ne "">
+								<break>
+							</if>
+						</if>
+					</rex>
+				</if>
+				<if $posttitle eq "">
+					<rex '>><td\P=!<span\spaceclass\="smalltext+\F<span\spaceclass\="smalltext' $cells>
+					<rex ">\P=.+" $ret>
+					<fetch localhost/index.html $ret>
+					<urltext>
+					<$posttitle=$ret>
+					<trimmer inout=$&posttitle>
+				</if>
+				<if $SITEDOMAIN eq 'www.offtopicalia.com'>
+					<rex max=1 '>><div\spaceclass\="smalltext"=!</div>+</div>=' $originalpostdata></rex>
+					<getdivs data=$ret divs=$&divs>
+					<loop max=1 $divs>
+						<gettagtextorhtml tag=$divs istext=1 textret=$&lastpostdate>
+						<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+					</loop>
+				<else>
+					<rex '>><div\spaceclass\="smalltext=.+' $cells>
+					<getdivs data=$ret divs=$&divs>
+					<loop max=1 $divs>
+						<rex ">\P=.+" $divs>
+						<fetch localhost/index.html $ret>
+						<urltext>
+						<$divcontent=$ret>
+						<rex ">>on:\P=.+" $divcontent>
+						<if $ret ne "">
+	D1						<if $SITEDOMAIN eq 'fx-knight.com'>
+								<sandr ' - ' ' ' $ret>
+							</if>
+							<if $SITEDOMAIN eq 'gripevines.com'>
+						                <sandr '¬ª' "" $ret>
+                                                        </if>                                                                                                                                                                
+							<$lastpostdate=$ret>
+							<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+						<else>
+	D2
+							<$spdays="Lunes, " "Martes, " "MiÈrcoles, " "Jueves, " "Viernes, " "Domingo, " "S·bado, ">
+							<if $SITEDOMAIN eq 'ceedclub.ru'>
+								<rex row max=1 '>>–û—Ç–≤–µ—Ç=' $divcontent></rex>
+								<if $ret neq ''>
+									<rex row max=1 ':\P=.+' $divcontent></rex>
+								<else>
+									<rex row max=1 '>>=.+' $divcontent></rex>
+								</if>
+							<else>
+								<rex ':\P=.+' $divcontent>
+							</if>
+							<sandr $spdays "" $ret>
+							<sandr "\spacede\space" "-" $ret>
+							<sandr "\spaceklo:" " " $ret>
+							<sandr " √† " " " $ret>
+							<sandr ' ‚ ' ' ' $ret>
+							<sandr ' –≤ ' ' ' $ret>
+							<sandr ' ‡s ' ' ' $ret>
+							<if $LANG eq "Swedish" or $LANG eq "Norwegian">
+								<sandr ' kl\.' '' $ret>
+								<sandr '\. ' '.' $ret>
+							<elseif $LANG eq "Spanish">
+								<sandr ' a las ' ' ' $ret>
+							<elseif $LANG eq "Russian">
+								<sandr "¬ª" "" $ret>
+								<sandr 'ª' "" $ret>
+								<sandr ' –≤ ' " " $ret>
+								<sandr '¬´' "" $ret>
+								<sandr '¬ª' "" $ret>
+							</if>
+							<if $SITEDOMAIN eq 'forum.merelbeke.net'>
+								<sandr ' - ' ' ' $ret>
+							</if>
+							<$lastpostdate=$ret>
+							<if $SITEDOMAIN eq 'mama51.ru'>
+								<!-- convert dd, mm, yyyy, hh:mm:ss to dd.mm.yyyy hh:mm:ss -->
+								<sandr '>>\digit\digit\P=\, =\F\digit\digit\, \digit\digit\digit\digit=' '.' $lastpostdate>
+								<sandr '>>\digit\digit\.\digit\digit\P=\, =\F\digit\digit\digit\digit=' '.' $ret>
+								<$lastpostdate=$ret>
+							<elseif $SITEDOMAIN eq 'baby.dn.ua'>
+								<!-- move time from front to end of string -->
+								<rex max=1 '\digit+:=\digit+' $lastpostdate></rex>
+								<$holdtime=$ret>
+								<sandr '\digit+:=\digit+' '' $lastpostdate>
+								<sum "%s" $ret ' ' $holdtime>
+								<$lastpostdate=$ret>
+							</if>
+							<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+						</if>
+					</loop>
+				</if>
+				<if $lastpostdate eq "">
+D3
+					<rex '>><span\spaceclass\="smalltext=.+' $cells>
+					<getspans data=$ret spans=$&spans>
+					<loop max=1 $spans>
+						<rex ">\P=.+" $spans>
+						<fetch localhost/index.html $ret>
+						<urltext>
+						<if $SITEDOMAIN eq 'foro.seguridadwireless.net' or $SITEDOMAIN eq 'www.aepic.es'>
+							<$onrex=">>Respuesta?!:+:\P=.+">
+						<elseif $SITEDOMAIN eq 'syktforum.ru'>
+							<$onrex=">>¬´=!:+:\P=.+">
+						<else>
+							<$onrex=">>on:\P=.+" ">>le:\P=.+" ">>kdy:\P=.+">
+						</if>
+						<rex $onrex $ret>
+						<$lastpostdate=$ret>
+						<fixdate inoutdate=$&lastpostdate>
+						<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+					</loop>
+				</if>
+				<if $htmlbody eq "">
+					<sandr '>><table=!</table>+</table>' '' $cells>
+					<rex ">\P=.+" $ret>
+					<$htmlbody=$ret>
+					<fetch localhost/index.html $htmlbody>
+					<urltext>
+					<$postbody=$ret>
+					<trimmer inout=$&postbody>
+					<removequotes bodydata=$bodydata bodynoquotes=$&bodynoquotes>
+				</if>
+			</if>
+		</loop>
+		<if $lastpostdate eq "">
+D4
+			<rex '<td=!<td+<table=!<table+>><div\spaceclass\="post"=.+' $postdata>
+			<$celldata=$ret>
+			<rex '>><div\spaceclass\="smalltext=!<td+\F<td' $celldata>
+			<rex ">\P=.+" $ret>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$divcontent=$ret>
+			<if $SITEDOMAIN eq 'ceedclub.ru'>
+				<rex row max=1 '>>–û—Ç–≤–µ—Ç=' $divcontent></rex>
+				<if $ret neq ''>
+					<rex row max=1 ':\P=.+' $divcontent></rex>
+				<else>
+					<rex row max=1 '>>=.+' $divcontent></rex>
+				</if>
+			<else>
+				<rex ">>on:\P=.+" $divcontent>
+			</if>
+			<if $ret ne "">
+				<$lastpostdate=$ret>
+				<if $LANG eq "Russian">
+					<sandr ' –≤ ' " " $lastpostdate>
+					<sandr '¬´' "" $ret>
+					<sandr '¬ª' "" $ret>
+					<$lastpostdate=$ret>
+				</if>
+				<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+			<else>
+				<$spdays="Lunes, " "Martes, " "MiÈrcoles, " "Jueves, " "Viernes, " "Domingo, " "S·bado, ">
+				<rex ':\P=.+' $divcontent>
+				<sandr $spdays "" $ret>
+				<sandr "\spacede\space" "-" $ret>
+				<$lastpostdate=$ret>
+				<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+			</if>
+			<if $posttitle eq "">
+				<rex '>><td\P=!<div\spaceclass\="smalltext+\F<div\spaceclass\="smalltext' $celldata>
+				<rex ">\P=.+" $ret>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$posttitle=$ret>
+				<trimmer inout=$&posttitle>
+			</if>
+			<if $posttitle eq "">
+				<rex '>><td\P=!<span\spaceclass\="smalltext+\F<span\spaceclass\="smalltext' $celldata>
+				<rex ">\P=.+" $ret>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$posttitle=$ret>
+				<trimmer inout=$&posttitle>
+			</if>
+			<if $lastpostdate eq "" and ($SITEDOMAIN eq 'www.spaargids.be' or $SITEDOMAIN eq 'www.coeliakieforum.nl'
+				or $SITEDOMAIN eq 'www.oplossing.be')>
+				<rex max=1 '>>Gepost op:</b>\P=!</span+' $cells></rex>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$lastpostdate=$ret>
+				<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+				<if $author eq ''>
+				<rex max=1 '<b>=!<b>+>><span class\="smalltext">=' $cells></rex>
+					<fetch localhost/index.html $ret>
+					<urltext>
+					<$author=$ret>
+					<trimmer inout=$&author>
+				</if>
+			</if>
+			<if $lastpostdate eq "" and  ($SITEDOMAIN eq 'foro.portalhacker.net' or $SITEDOMAIN eq 'www.masquechicos.com')>
+				<$rexpatterndate='>><b>Respuesta =!</span>+</span>' '>><b> :</b> =!</span>+</span>'
+				'>><b> en:</b> =!</span>+</span>' >
+				<rex max=1 $rexpatterndate $cells></rex>
+				<sandr '.+>> :=' '' $ret>
+				<sandr ' de ' ' ' $ret>
+				<sandr ' a las ' ' ' $ret>
+				<sandr '\, ' ' ' $ret>
+				<sandr ' ‡s ' ' ' $ret>
+				<sandr '\xc5\xbfeptiembre' 'septiembre' $ret>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$lastpostdate=$ret>
+				<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+			</if>
+			<if $SITEDOMAIN eq 'kopworld.net'>
+				<rex max=1 '>><small=!</small>+' $celldata></rex>
+				<sandr ' at ' ' ' $ret>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$lastpostdate=$ret>
+				<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+			</if>
+		</if>
+		<if $SITEDOMAIN eq 'forum.krasnet.ru' or $SITEDOMAIN eq 'retro.dn.ua'>
+			<rex max=1 '>>&#171;\P=!&#187;+' $cells></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$lastpostdate=$ret>
+			<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		</if>
+		<if $avatarurl eq ''>
+		<!-- AVATAR -->
+			<$avatarrex='<img=!<img+>>class\="avatar"=!>+>='>
+			<$avreject='no\-avatar\.jpg'>
+			<rex max=1 $avatarrex $postdata></rex>
+			<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl reject=$avreject>
+		</if>
+		<if $SITEDOMAIN eq "www.atlanticz.ca" OR $SITEDOMAIN eq 'www.canadiandriver.com' or $SITEDOMAIN eq 'www.kostky.org'>
+			<rex row '<a=!<.+>>;image=!</a>+</a>=!</a>+</a>=' $postdata>
+				<$attachments = $ret>
+				<rex ">>action\=dlattach;=" $attachments>
+				<if $ret neq ''>
+					<sum "%s" $htmlbody $attachments>
+					<$htmlbody = $ret>
+				</if>
+			</rex>
+			<fetch localhost/index.html $htmlbody>
+			<urltext>
+			<$postbody=$ret>
+		</if>
+		<if $SITEDOMAIN eq 'www.iqcolony.com'>
+			<rex row '<a=!<.+>>action\=dlattach;=!</a>+</a>=' $postdata>
+				<$attachments = $ret>
+				<sum "%s" $htmlbody $attachments>
+				<$htmlbody = $ret>
+			</rex>
+			<fetch localhost/index.html $htmlbody>
+			<urltext>
+			<$postbody=$ret>
+		</if>
+		<if $SITEDOMAIN eq "www.vatersein.de" or $SITEDOMAIN eq "kopworld.net"
+			or $SITEDOMAIN eq 'ceedclub.ru'>
+			<$posttitle=>
+			<rex max=1 '<div=!<div+>>id\="subject_=.+' $originalpostdata></rex>
+			<getdivs data=$ret divs=$&divs>
+			<loop max=1 $divs>
+				<rex ">\P=.+" $divs>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$posttitle=$ret>
+				<trimmer inout=$&posttitle>
+			</loop>
+		</if>
+		<if $SITEDOMAIN eq "www.argim.org">
+			<rex '<img=!<img+>>/flags/=!<br+' $postdata>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$authorloc=$ret>
+			<trimmer inout=$&authorloc>
+		</if>
+		<if $SITEDOMAIN eq 'www.desdeunlugarmejor.com'>
+			<!--POST TITLE-->
+			<rex max=1 '<div=!<...+>>id\="subject_=!</div>+</div>=' $originalpostdata></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$posttitle=$ret>
+			<trimmer inout=$&posttitle>
+			<!--LAST POST DATE-->
+			<rex max=1 '<div=!<...+>>id\="subject_=!</div>+</div>=!</tr>+' $originalpostdata></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<sandr '.+>> el:=' '' $ret>
+			<$lastpostdate=$ret>
+			<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+			<!--GENDER-->
+			<rex '>>Sexo:\P=!<br+\F<br' $postrow1>
+			<$genderhtml=$ret>
+			<rex '>>Masculino=' $genderhtml>
+			<if $ret neq ''>
+				<$gender = 'M'>
+			<else>
+				<rex '>>Femenino=' $genderhtml>
+				<if $ret neq ''>
+					<$gender = 'F'>
+				</if>
+			</if>
+			<!--AUTHOR-->
+			<rex max = 1 '<a=!<.+>>/profiles/=!</a>+</a>=' $postrow1></rex>
+			<fetch $THREADURL $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<if $author neq ''>
+				<urllinks>
+				<$authorurl=$ret>
+			<else>
+				<rex ">\P=.+" $postrow1>
+				<rex '.+\F<br=' $ret>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$author=$ret>
+				<trimmer inout=$&author>
+			</if>
+		</if>
+		<if $SITEDOMAIN eq 'www.all-kursk.ru'>
+			<rex max = 1 '<a\space=!<a\space+>>\?action\=profile;u\==!</a>+</a>=' $postrow1></rex>
+			<fetch $THREADURL $ret>
+			<urllinks>
+			<$authorurl=$ret>
+		</if>
+		<rex '<div\space=!<div\space*>>class\="signature=.+' $postdata>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=1 $divs>
+			<rex ">\P=.+" $divs>
+			<$signature=$ret>
+		</loop>
+		<trimmer inout=$&signature>
+		<if $SITEDOMAIN eq 'novajeepers.net'>
+			<rex max = 1 '<a=!<.+>>\?action\=profile=!</a>+</a>=' $postrow1></rex>
+			<fetch $THREADURL $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<if $author neq ''>
+				<urllinks>
+				<$authorurl=$ret>
+			</if>
+		</if>
+		<if $SITEDOMAIN eq 'bitcointalk.org'>
+			<rex max=1 '<td=!<td+>>class\="subject=!</td>+' $postrow1></rex>
+			<rex max=1 '>><div class\="smalltext=!</div>+' $ret></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$lastpostdate=$ret>
+			<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		</if>
+		<if $SITEDOMAIN eq 'retro.dn.ua'>
+			<!-- search whole post for location -->
+			<rex $locrex $postrow1>		<!-- locrex is defined above when cycling through cells -->
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$authorloc=$ret>
+			<trimmer inout=$&authorloc>
+		</if>
+		<if $SITEDOMAIN eq 'hlebopechka.ru'>
+			<rex max=1 '>><div id\="subject_=!</div>+' $postdata></rex>
+			<rex max=1 '>><span class\="smalltext=!</span>+' $ret></rex>
+			<sandr '\#=\digit+' '' $ret>
+			<sandr ' ‚ ' ' ' $ret>
+			<sandr '\.' '' $ret>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$lastpostdate=$ret>
+			<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+			<rex max=1 '>><td class\="windowbg2=!<br+' $postdata></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<$posttitle=>
+		</if>
+		<if $REGISTRATIONDATEFORMATID ne '' AND $REGISTRATIONDATEFORMATID ne '0'>
+R1
+			<$authorregrex='>>Registo:\P=!<+\F<' '>>–†–µ–≥–∏—Å—Ç—Ä–∞—Ü–∏—è:\P=!<+'>
+			<rex $authorregrex $postdata>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$registered=$ret>
+			<trimmer inout=$&registered>
+			<fixregdate passdate=$&registered>
+			<checkdate lang=$LANG isdateonly=1 indate=$&registered indateid=$REGISTRATIONDATEFORMATID registereddate=1>
+		</if>
+		<rex 'javascript:void' $authorurl>
+		<if $ret ne ''><$authorurl=></if>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+		<if $invalidfound eq 0>
+			<$rexloop=($rexloop+1)>
+		</if>
+		<if $SITEDOMAIN eq 'tacuma.com.ua'>
+			<if $rexloop eq 1 and $FIRSTPAGE neq 1>
+				<!--every page has TS post-->
+				This is TS
+				<continue>
+			</if>
+		</if>
+		<!-- SITEPOSTID - using anchor value by default -->
+		<loop max=1 $anchor><$sitepostid=$anchor></loop>
+		<!-- CHARSET CONVERSION -->
+                <if $CHARSETSRC ne '' and $CHARSET ne '' and $CHARSETSRC ne $CHARSET>
+			<urlutil charsetconv $htmlbody $CHARSETSRC $CHARSET>
+			<$htmlbody=$ret>
+			<urlutil charsetconv $signature $CHARSETSRC $CHARSET>
+			<$signature=$ret>
+                </if>
+                <!--  -->
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 1>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+<!---------------------------------
+insert post - control values:
+threadid $INSERTEDTHREADID
+forumid $FORUMID
+siteid $SITEID
+urlthreadid $URLTHREADID
+postdate $lastpostdate
+siteurl $SITEURL
+author $author
+bbstype $BBSTYPE
+lang $LANG
+threadtitle $THREADTITLE
+forumname $FORUMNAME
+forumurl $FORUMURL
+sitetitle $SITETITLE
+threadstarter  $threadstarter-->
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=6>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod3 private textdata>
+method3
+	<domain_blocker callingmethod='3' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<$rexloop=0>
+	<$rexpattern='>><td\spaceclass\="windowbg=!<td\spaceclass\="windowbg+'>
+	<if $SITEDOMAIN eq 'www.egitim-forum.com'>
+		<$rexpattern='>><td\spaceclass\="windowbg=[^3]=!<td\spaceclass\="windowbg+'>
+	</if>
+	<rex row $rexpattern $textdata>
+		<$postdata=$ret>
+		<clearpostrecbuffer>
+		<if $SITEDOMAIN neq 'waronyou.com'>
+			<getanchor data=$postdata>
+		</if>
+<!--****************************************************
+<send $postdata>
+
+****************************************************-->
+		<$postrow1=>
+		<getrows data=$postdata rows=$&rows>
+		<loop max=1 $rows>
+			<$postrow1=$rows>
+		</loop>
+		<if $postrow1 eq "">
+			<rex '<tr=!<tr+>>action\=profile=.+' $postdata>
+			<$postrow1=$ret>
+		</if>
+		<getcells data=$postrow1 cells=$&cells>
+		<loop $cells>
+			<$cellnext=$next>
+			<if $cellnext eq 1>
+				<rex '.+\F<div\spaceclass\="smalltext' $cells>
+				<rex row max=1 '>><a\space=!</a>+</a>=' $ret></rex>
+				<fetch $THREADURL $ret>
+				<urltext>
+				<$author=$ret>
+				<trimmer inout=$&author>
+				<if $author ne "">
+					<urllinks>
+					<$authorurl=$ret>
+				<else>
+					<rex ">\P=.+" $cells>
+					<rex '.+\F<div\spaceclass\="smalltext' $ret>
+					<fetch localhost/index.html $ret>
+					<urltext>
+					<$author=$ret>
+					<trimmer inout=$&author>
+					<if $author eq "">
+						<rex row max=1 '>><a\space=!</a>+</a>=' $cells></rex>
+						<fetch $THREADURL $ret>
+						<urltext>
+						<$author=$ret>
+						<trimmer inout=$&author>
+						<if $author ne "">
+							<urllinks>
+							<$authorurl=$ret>
+						</if>
+					</if>
+				</if>
+				<rex '>>Gender:\P=!<br+\F<br' $cells>
+				<$genderhtml=$ret>
+				<if $genderhtml eq "">
+					<rex '>>Sesso:\P=!<br+\F<br' $cells>
+					<$genderhtml=$ret>
+				</if>
+				<rex 'Female' $genderhtml>
+				<if $ret ne "">
+					<$gender="F">
+				<else>
+					<rex 'Male' $genderhtml>
+					<if $ret ne "">
+						<$gender="M">
+					</if>
+				</if>
+				<$malerex='Male\.gif'>
+				<$femalerex='Female\.gif'>
+				<rex $malerex $postdata>
+				<if $ret ne ''><$gender="M"></if>
+				<rex $femalerex $postdata>
+				<if $ret ne ''><$gender="F"></if>
+				<!-- AVATAR -->
+				<$avatarrex='<img=!<img+>>class\="avatar"=!>+>=' '<img=!<img+>>/avatars/=!>+>='
+							'<img=!<img+>>/galleria/albums/userpics/=!>+>=' '<img=!<...+>>type\=avatar=!>+>='
+							'<img=!<img+>>/picture\?type\=normal=!>+>='>
+				<rex max=1 $avatarrex $cells></rex>
+				<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl>
+	            <$locrex='>>Location:\P=!<br />+'>
+				<rex $locrex $cells>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$authorloc=$ret>
+				<trimmer inout=$&authorloc>
+			<elseif $cellnext eq 2>
+				<if $anchor eq "">
+					<rex max=1 '>>msg=\digit+#\P=msg=\digit+' $cells></rex>
+					<$anchor=$ret>
+				</if>
+				<rex '<div=!<div+>>id\="subject_=.+' $cells>
+				<getdivs data=$ret divs=$&divs>
+				<loop max=1 $divs>
+					<rex ">\P=.+" $divs>
+					<fetch localhost/index.html $ret>
+					<urltext>
+					<$posttitle=$ret>
+					<trimmer inout=$&posttitle>
+				</loop>
+				<if $posttitle eq "">
+					<rex row '>><a\space=!<a\space+</a>=' $cells>
+						<$htmllink=$ret>
+						<rex "#" $htmllink>
+						<if $ret ne "">
+							<fetch localhost/index.html $htmllink>
+							<urltext>
+							<$posttitle=$ret>
+							<trimmer inout=$&posttitle>
+							<if $posttitle ne "">
+								<break>
+							</if>
+						</if>
+					</rex>
+				</if>
+				<if $posttitle eq "">
+					<rex '>><td\P=!<span\spaceclass\="smalltext+\F<span\spaceclass\="smalltext' $cells>
+					<rex ">\P=.+" $ret>
+					<fetch localhost/index.html $ret>
+					<urltext>
+					<$posttitle=$ret>
+					<trimmer inout=$&posttitle>
+				</if>
+				<rex '>><div\spaceclass\="smalltext=.+' $cells>
+				<getdivs data=$ret divs=$&divs>
+				<loop max=1 $divs>
+D1
+					<rex ">\P=.+" $divs>
+					<fetch localhost/index.html $ret>
+					<urltext>
+					<$divcontent=$ret>
+					<rex ">>on:\P=.+" $divcontent>
+					<if $ret ne "">
+						<$lastpostdate=$ret>
+						<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+					<else>
+						<$spdays="Lunes, " "Martes, " "MiÈrcoles, "Jueves, "Viernes, " "Domingo, " "S·bado, ">
+						<rex ':\P=.+' $divcontent>
+						<sandr $spdays "" $ret>
+						<sandr "\spacede\space" "-" $ret>
+						<sandr " ‚ " " " $ret>
+						<$lastpostdate=$ret>
+						<fixdate inoutdate=$&lastpostdate>
+						<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+					</if>
+				</loop>
+				<if $lastpostdate eq "">
+D2
+					<rex '>><span\spaceclass\="smalltext=.+' $cells>
+					<getspans data=$ret spans=$&spans>
+					<loop max=1 $spans>
+						<rex ">\P=.+" $spans>
+						<fetch localhost/index.html $ret>
+						<urltext>
+						<rex ">>on:\P=.+" $ret>
+						<$lastpostdate=$ret>
+						<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+					</loop>
+				</if>
+				<if $htmlbody eq "">
+					<sandr '>><table=!</table>+</table>' '' $cells>
+					<add_cleanup inouthtml=$&ret>
+					<rex ">\P=.+" $ret>
+					<$htmlbody=$ret>
+					<fetch localhost/index.html $htmlbody>
+					<urltext>
+					<$postbody=$ret>
+					<trimmer inout=$&postbody>
+					<removequotes bodydata=$htmlbody bodynoquotes=$&bodynoquotes>
+				</if>
+			</if>
+		</loop>
+		<if $lastpostdate eq "">
+D3
+			<rex '<td=!<td+<table=!<table+>><div\spaceclass\="post"=.+' $postdata>
+			<$celldata=$ret>
+			<if $SITEDOMAIN eq 'www.creadoo.com'>
+				<rex '>><span\spaceclass\="smalltext=!<td+\F<td' $celldata>
+			<else>
+				<rex '>><div\spaceclass\="smalltext=!<td+\F<td' $celldata>
+			</if>
+			<rex ">\P=.+" $ret>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$divcontent=$ret>
+			<rex ">>on:\P=.+" $divcontent>
+			<if $ret ne "">
+				<$lastpostdate=$ret>
+				<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+			<else>
+				<$spdays="Lunes, " "Martes, " "MiÈrcoles, "Jueves, "Viernes, " "Domingo, " "S·bado, ">
+				<rex ':\P=.+' $divcontent>
+				<sandr $spdays "" $ret>
+				<sandr "\spacede\space" "-" $ret>
+				<sandr ' um ' ' ' $ret>
+				<sandr '\.' '' $ret>
+				<$lastpostdate=$ret>
+				<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+			</if>
+			<if $posttitle eq "">
+				<rex '>><td\P=!<div\spaceclass\="smalltext+\F<div\spaceclass\="smalltext' $celldata>
+				<rex ">\P=.+" $ret>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$posttitle=$ret>
+				<trimmer inout=$&posttitle>
+			</if>
+			<if $posttitle eq "">
+				<rex '>><td\P=!<span\spaceclass\="smalltext+\F<span\spaceclass\="smalltext' $celldata>
+				<rex ">\P=.+" $ret>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$posttitle=$ret>
+				<trimmer inout=$&posttitle>
+			</if>
+		</if>
+		<if $htmlbody eq "">
+			<rex '>><div\spaceclass\="post"=.+' $postdata>
+			<getdivs data=$ret divs=$&divs>
+			<loop max=1 $divs>
+				<add_cleanup inouthtml=$&divs>
+				<rex ">\P=.+" $divs>
+				<$htmlbody=$ret>
+				<fetch localhost/index.html $htmlbody>
+				<urltext>
+				<$postbody=$ret>
+				<trimmer inout=$&postbody>
+				<removequotes bodydata=$htmlbody bodynoquotes=$&bodynoquotes>
+			</loop>
+		</if>
+		<!-- SIGNATURE - sometimes in the 2nd row, so it must be extracted from $postdata -->
+		<rex '<div=!<div*>>class\="signature"=.+' $postdata>
+		<getdivs data=$ret divs=$&sigdivs>
+		<loop max=1 $sigdivs>
+			<gettagtextorhtml tag=$sigdivs istext=0 textret=$&signature>
+		</loop>
+		<if $REGISTRATIONDATEFORMATID ne '' AND $REGISTRATIONDATEFORMATID ne '0'>
+R1
+			<$authorregrex='>>>–Â„ËÒÚ‡ˆËˇ:\P=!<+\F<'>
+			<rex $authorregrex $postdata>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$registered=$ret>
+			<trimmer inout=$&registered>
+			<checkdate lang=$LANG isdateonly=1 indate=$&registered indateid=$REGISTRATIONDATEFORMATID registereddate=1>
+		</if>
+		<if $SITEDOMAIN eq 'forum.toyota-allion.ru'>
+			<rex max=1 '<a=!<a+>>\?action\=profile;u=!</a>+</a>=' $postdata></rex>
+			<fetch $u $ret>
+			<urllinks>
+			<$authorurl=$ret>
+			<rex max=1 '>>msg=\digit+#\P=msg=\digit+' $postdata></rex>
+			<$anchor=$ret>
+		</if>
+		<if $SITEDOMAIN eq 'www.creadoo.com' or $SITEDOMAIN eq 'forum.passioneauto.it' or $SITEDOMAIN eq 'www.go-android.de'
+			or $SITEDOMAIN eq 'www.cogknowhow.com'>
+			<rex max=1 '>>msg=\digit+/?#\P=msg=\digit+' $postdata></rex>
+			<$anchor=$ret>
+		</if>
+		<!-- SITEPOSTID - using anchor value by default -->
+		<if $HASUNIQUESITEPOSTID eq 1>
+			<loop max=1 $anchor><$sitepostid=$anchor></loop>
+		</if>
+		<if $author eq 'Advertisement' or $author eq 'PakStudy : Study Matters in Pakistan'>
+			<$author=''>
+		</if>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+		<if $invalidfound eq 0>
+			<$rexloop=($rexloop+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 1>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				recommendation=""
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=3>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod4 private textdata>
+method4
+	<domain_blocker callingmethod='4' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '<table=!<table+<table=!<table+>>action\=profile=!action\=profile+' $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<getanchor data=$postdata>
+		<$posttable=>
+		<gettables data=$postdata tables=$&tables>
+		<loop max=1 $tables>
+			<$posttable=$tables>
+		</loop>
+		<getrows data=$posttable rows=$&rows>
+		<loop max=1 $rows>
+			<getcells data=$rows cells=$&cells>
+			<loop $cells>
+				<$cellnext=$next>
+				<rex ">\P=.+" $cells>
+				<$coldata=$ret>
+				<if $cellnext eq 1>
+					<getlinktext hreftext="action\=profile" data=$coldata linktext=$&linktext>
+					<$author=$linktext>
+					<fetch $THREADURL $coldata>
+					<getauthorurl>
+				<elseif $cellnext eq 2>
+					<getrows data=$coldata rows=$&rows2>
+					<loop $rows2>
+						<if $next eq 1>
+							<getcells data=$rows2 cells=$&cells2>
+							<loop $cells2>
+								<if $next eq 2>
+									<rex '<div=!<div+>>id\="subject_=.+' $cells2>
+									<getdivs data=$ret divs=$&divs>
+									<loop max=1 $divs>
+										<rex ">\P=.+" $divs>
+										<fetch localhost/index.html $ret>
+										<urltext>
+										<$posttitle=$ret>
+									</loop>
+									<rex "on:\P=.+" $cells2>
+									<fetch localhost/index.html $ret>
+									<urltext>
+									<$lastpostdate=$ret>
+									<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+								</if>
+							</loop>
+						</if>
+					</loop>
+					<rex "</table>\P=.+" $coldata>
+					<$htmlbody=$ret>
+					<fetch localhost/index.html $htmlbody>
+					<urltext>
+					<$postbody=$ret>
+					<removequotes bodydata=$postbody bodynoquotes=$&bodynoquotes>
+				</if>
+			</loop>
+		</loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=4>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod5 private textdata>
+method5
+	<domain_blocker callingmethod='5' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '<table=!<table+>>action\=profile=!action\=profile+' $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<getanchor data=$postdata>
+		<$posttable=>
+		<gettables data=$postdata tables=$&tables>
+		<loop max=1 $tables>
+			<$posttable=$tables>
+		</loop>
+		<getrows data=$posttable rows=$&rows>
+		<loop max=1 $rows>
+			<getcells data=$rows cells=$&cells>
+			<loop $cells>
+				<$cellnext=$next>
+				<rex ">\P=.+" $cells>
+				<$coldata=$ret>
+				<if $cellnext eq 1>
+					<getlinktext hreftext="action\=profile" data=$coldata linktext=$&linktext>
+					<$author=$linktext>
+					<fetch $THREADURL $coldata>
+					<getauthorurl>
+				<elseif $cellnext eq 2>
+					<getrows data=$coldata rows=$&rows2>
+					<loop $rows2>
+						<if $next eq 1>
+							<getcells data=$rows2 cells=$&cells2>
+							<loop $cells2>
+								<if $next eq 2>
+									<rex '<div=!<div+>>id\="subject_=.+' $cells2>
+									<getdivs data=$ret divs=$&divs>
+									<loop max=1 $divs>
+										<rex ">\P=.+" $divs>
+										<fetch localhost/index.html $ret>
+										<urltext>
+										<$posttitle=$ret>
+									</loop>
+									<rex "on:\P=.+" $cells2>
+									<fetch localhost/index.html $ret>
+									<urltext>
+									<$lastpostdate=$ret>
+									<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+								</if>
+							</loop>
+						</if>
+					</loop>
+					<rex "</table>\P=.+" $coldata>
+					<$htmlbody=$ret>
+					<fetch localhost/index.html $htmlbody>
+					<urltext>
+					<$postbody=$ret>
+					<removequotes bodydata=$postbody bodynoquotes=$&bodynoquotes>
+				</if>
+			</loop>
+			<if $lastpostdate eq "">
+				<rex '<table=!<table+>>class\="postdate"=.+' $posttable>
+				<gettables data=$ret tables=$&tables>
+				<loop max=1 $tables>
+					<getcells data=$tables cells=$&cells2>
+					<loop $cells2>
+						<if $next eq 2>
+							<rex "on:\P=.+" $cells2>
+							<fetch localhost/index.html $ret>
+							<urltext>
+							<$lastpostdate=$ret>
+							<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+						</if>
+					</loop>
+				</loop>
+			</if>
+			<if $postbody eq "">
+				<rex '>><div\spaceclass\="post">=.+' $posttable>
+				<getdivs data=$ret divs=$&divs>
+				<loop max=1 $divs>
+					<rex ">\P=.+" $divs>
+					<$htmlbody=$ret>
+					<fetch localhost/index.html $htmlbody>
+					<urltext>
+					<$postbody=$ret>
+					<removequotes bodydata=$postbody bodynoquotes=$&bodynoquotes>
+				</loop>
+			</if>
+		</loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter  signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=5>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod7 private textdata>
+method7
+	<domain_blocker callingmethod='7' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '>><a\spacename\="msg=!<a\spacename\="msg+' $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<$posttable=>
+		<$postbodytable=>
+		<getanchor data=$postdata>
+		<$posttable=>
+		<rex max=1 '<table\P=.+' $postdata></rex>
+		<gettables data=$ret tables=$&tables>
+		<loop max=3 $tables>
+			<!-- if it's a first post on the page, read 2nd and 3rd table; if not a first post, read 1st and 2nd table -->
+			<if $rexloop eq 1><!-- second rex match is actually the (first) valid post -->
+				<if $next eq 2>
+					<$posttable=$tables>
+				<elseif $next eq 3>
+					<$postbodytable=$tables>
+				</if>
+			<else>
+				<if $next eq 1>
+					<$posttable=$tables>
+				<elseif $next eq 2>
+					<$postbodytable=$tables>
+				</if>
+			</if>
+		</loop>
+		<rex row '<a\space=!<a\space+>>action\=profile=!</a>+</a>' $postdata>
+			<$linkdata=$ret>
+			<fetch $THREADURL $linkdata>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<if $author ne "">
+				<urllinks>
+				<loop max=1 $ret>
+					<$authorurl=$ret>
+				</loop>
+				<break>
+			</if>
+		</rex>
+		<rex '>><span\spacestyle\="font\-size:\spacex\-small;=.+' $posttable>
+		<getspans data=$ret spans=$&spans>
+		<loop max=1 $spans>
+			<rex ">\P=.+" $spans>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$lastpostdate=$ret>
+			<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		</loop>
+		<getcells data=$postbodytable cells=$&cells>
+		<loop max=2 $cells>
+			<if $next eq 2>
+				<rex ">\P=.+" $cells>
+				<$htmlbody=$ret>
+				<fetch localhost/index.html $htmlbody>
+				<urltext>
+				<$postbody=$ret>
+				<removequotes bodydata=$postbody bodynoquotes=$&bodynoquotes>
+			</if>
+		</loop>
+		<rex '>><div\spaceclass\="signature"=.+' $postdata>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=1 $divs>
+			<rex ">\P=.+" $divs>
+			<$signature=$ret>
+		</loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 1>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter  signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=7>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod8 private textdata>
+method8
+	<domain_blocker callingmethod='8' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '>><a\spacename\="msg=!<a\spacename\="msg+' $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<getanchor data=$postdata>
+		<$postrow1=>
+		<$postrow2=>
+		<!-- pools in 'darkreign40k.com' first post was not working-->
+		<rex max=1 '>>_poll\.gif"' $postdata></rex>
+		<if $ret neq ''  and $SITEDOMAIN eq 'darkreign40k.com' and  $rexloop eq 0 >
+			<rex row '>><td\spaceclass\="windowbg=!<td\spaceclass\="windowbg+' $postdata>
+				<$temp=$ret>
+			</rex>
+		<else>
+			<rex max=1 '>><td\spaceclass\="windowbg=.+' $postdata></rex>
+			<$temp=$ret>
+		</if>
+		<getrows data=$temp rows=$&rows>
+		<loop max=2 $rows>
+			<if $next eq 1>
+				<$postrow1=$rows>
+			<elseif $next eq 2>
+				<$postrow2=$rows>
+			</if>
+		</loop>
+		<getcells data=$postrow1 cells=$&cells>
+		<loop $cells>
+			<$cellnext=$next>
+			<if $cellnext eq 1>
+				<!-- AUTHOR, URL & LOC -->
+				<rex max=1 '<a\space=!<a\space+>>action\=profile=!</a>+</a>=' $cells></rex>
+				<fetch $THREADURL $ret>
+				<urllinks>
+				<$authorurl=$ret>
+				<urltext>
+				<$author=$ret>
+				<trimmer inout=$&author>
+				<rex max=1 '>>Location:\P=!<+' $cells></rex>
+				<$authorloc=$ret>
+				<trimmer inout=$&authorloc>
+				<rex max=1 '>>Age: \P=!<+' $cells></rex>
+				<$authorage=$ret>
+				<trimmer inout=$&authorage>
+			<elseif $cellnext eq 2>
+				<getdivs data=$cells divs=$&divs>
+				<loop max=2 $divs>
+					<if $next eq 1>
+						<gettagtextorhtml tag=$divs istext=1 textret=$&posttitle>
+					<elseif $next eq 2>
+						<gettagtextorhtml tag=$divs istext=1 textret=$&lastpostdate>
+						<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+					</if>
+				</loop>
+				<!-- BODY - just in case, extract the specific div, matched by class -->
+				<rex '>><div\spaceclass\="post"=.+' $cells>
+				<getdivs data=$ret divs=$&bodydivs>
+				<loop max=1 $bodydivs>
+					<gettagtextorhtml tag=$bodydivs istext=0 textret=$&htmlbody>
+					<gettagtextorhtml tag=$bodydivs istext=1 textret=$&postbody>
+				</loop>
+			</if>
+		</loop>
+		<!-- SIGNATURE -->
+		<rex '>><div\spaceclass\="signature"=.+' $postrow2>
+		<getdivs data=$ret divs=$&sigdivs>
+		<loop max=1 $sigdivs>
+			<gettagtextorhtml tag=$sigdivs istext=0 textret=$&signature>
+		</loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$postbody
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=8>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod9 private textdata>
+method9
+	<domain_blocker callingmethod='9' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '>><a\spacename\="msg=!<a\spacename\="msg+' $textdata>
+		<$reversecount=$loop>
+	</rex>
+	<rex row '>><a\spacename\="msg=!<a\spacename\="msg+' $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<$postheader=>
+		<$postcontent=>
+		<$sigcontent=>
+		<getanchor data=$postdata>
+		<$posttable=>
+		<rex max=1 '<div\spaceclass\="floatleft=.+' $postdata></rex>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=3 $divs>
+			<if $next eq 1>
+				<$postheader=$divs>
+			<elseif $next eq 2>
+				<$postcontent=$divs>
+			<elseif $next eq 3>
+				<$sigcontent=$divs>
+			</if>
+		</loop>
+<!--TABLE 1:
+<send $postheader>
+
+##################################################
+TABLE 2:
+<fmt "%!H\r\n"  $postcontent>
+
+##################################################-->
+		<rex row '<a\space=!<a\space+>>action\=profile=!</a>+</a>' $postheader>
+			<$linkdata=$ret>
+			<fetch $THREADURL $linkdata>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<if $author ne "">
+				<urllinks>
+				<loop max=1 $ret>
+					<$authorurl=$ret>
+				</loop>
+				<break>
+			</if>
+		</rex>
+		<if $author eq ''>
+			<rex max=1 '>><h4>\P=!</h4>+' $postheader></rex>
+			<$author=$ret><!-- no active link - no author url -->
+		</if>
+		<rex max=1 '>>/Female\.gif"' $postheader></rex>
+		<if $ret eq ''>
+			<rex max=1 '>>/Male\.gif"' $postheader></rex>
+			<if $ret neq ''>
+				<$gender='M'>
+			</if>
+		<else>
+			<$gender='F'>
+		</if>
+		<rex '>><h5 id\="subject_=!</h5>+</h5>=' $postcontent>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$posttitle=$ret>
+		<trimmer inout=$&posttitle>
+		<!--LAST POST DATE-->
+		<$daterex ='\space*>>on:</strong>\P=!<+' '\space*>>‡πÄ‡∏°‡∏∑‡πà‡∏≠:</strong>\P=!<+'
+			'\space*>>on:</strong>\P=\space*<b>=!</b>+</b>=!<+' '>>&#171;=\space*<strong>=!</strong>*</strong>\P=!&#187;+\F&#187;='>
+		<rex $daterex $postcontent>
+		<sandr '&#187' '' $ret>
+		<sandr '<=/?b>=' '' $ret>
+		<$lastpostdate=$ret>
+		<trimmer inout=$&lastpostdate>
+		<!-- making sure we get the single-value from the rex... because the multi-patterns may match 2 different results -->
+		<local tempdate1>
+		<$tempdate1=$lastpostdate>
+		<loop $lastpostdate>
+			<if $lastpostdate ne ''>
+				<$tempdate1=$lastpostdate>
+				<break>
+			</if>
+		</loop>
+		<$lastpostdate=$tempdate1>
+		<!---------------------->
+		<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		<getdivs data=$postcontent divs=$&divs>
+		<loop max=2 $divs>
+			<if $next eq 2>
+				<gettagtextorhtml tag=$divs istext=0 textret=$&htmlbody>
+				<gettagtextorhtml tag=$divs istext=1 textret=$&postbody>
+				<removequotes bodydata=$postbody bodynoquotes=$&bodynoquotes>
+			</if>
+		</loop>
+		<rex '>><div\spaceclass\="signature"=.+' $sigcontent>
+		<getdivs data=$ret divs=$&sigdivs>
+		<loop max=1 $sigdivs>
+			<gettagtextorhtml tag=$sigdivs istext=0 textret=$&signature>
+		</loop>
+		<!-- AVATAR -->
+		<$avatarrex='<img=!<img+>>class\="avatar"=!>+>=' >
+		<rex max=1 $avatarrex $postdata></rex>
+		<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl>
+		<!-- AUTHOR LOC -->
+		<$locrex='>><li>location:\P=!<+'>
+		<rex $locrex $postdata>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$authorloc=$ret>
+		<trimmer inout=$&authorloc>
+		<!-- SITEPOSTID - using anchor value by default -->
+		<loop max=1 $anchor><$sitepostid=$anchor></loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<$threadstarter=0>
+			<if $SITEDOMAIN eq 'www.smokey-services.eu'>
+				<!-- code for posts displayed in reverse order -->
+				<if $reversecount eq $rexloop and $FIRSTPAGE eq 1>
+					<$threadstarter=1>
+				</if>
+			<elseif ($SITEDOMAIN eq 'forum.domohozyaika.com' or $SITEDOMAIN eq 'smf.rcw.ms')>
+				<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+					<$threadstarter=1>
+				</if>
+			<else>
+				<if $FIRSTPAGE eq 1 and $rexloop eq 1>
+					<$threadstarter=1>
+				</if>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=9>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod10 private textdata>
+method10
+	<domain_blocker callingmethod='10' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<$mainrex='>><a id\="msg=!<a id\="msg+'>
+	<if $SITEDOMAIN eq 'www.satellite-audiovideo.com'>
+		<$mainrex='>><a name\="msg=!<a name\="msg+'>
+	</if>
+	<!-- posts displayed in reverse order for this site, so we have to determine how many posts are on page before parsing -->
+	<rex row $mainrex $textdata>
+		<$reversecount=$loop>
+	</rex>
+	<rex row $mainrex $textdata>
+		<sandr '>><a id\="lastPost">=.+' '' $ret>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<!-- ANCHOR -->
+		<rex '>><a id\="\P=msg=\digit+' $postdata>
+		<$anchor=$ret>
+		<!-- cleanup, especially the first post -->
+		<if $SITEDOMAIN eq 'www.mvisioneros.com'>
+			<sandr '<=!<+>>class\="ThankOMatic=.+' '' $postdata>
+			<$postdata = $ret>
+		<elseif $SITEDOMAIN eq 'www.allaboutdogfood.co.uk'>
+			<sandr '>><div class\="like=.+' '' $postdata>
+			<$postdata = $ret>
+		</if>
+		<if $SITEDOMAIN eq 'forums.tmonews.com' or $SITEDOMAIN eq 'www.chevyavalancheclub.com' or $SITEDOMAIN eq 'www.fertilityfriends.co.uk'
+			or $SITEDOMAIN eq 'www.kneeguru.co.uk' or $SITEDOMAIN eq 'www.babywhispererforums.com' or $SITEDOMAIN eq 'www.gendersupport.org' or $SITEDOMAIN eq 'www.anxietyzone.com' or $SITEDOMAIN eq 'www.susans.org'
+			or $SITEDOMAIN eq 'clubzafira.com' or $SITEDOMAIN eq 'talk.uk-yankee.com'>
+			<sandr '.+<div=!<...+>>\Fclass\="post_wrapper"=' '' $postdata>
+		<else>
+			<sandr '.+\F<div=!<div+>>action\=profile=' '' $postdata>
+		</if>
+		<getdivs data=$ret divs=$&divs>
+		<$leftdiv=>
+		<$rightdiv=>
+		<loop max=2 $divs>
+			<if $next eq 1>
+				<$leftdiv=$divs>
+			<else>
+				<$rightdiv=$divs>
+
+			</if>
+		</loop>
+		<!-- AUTHOR & URL-->
+		<rex max=1 '<a =!<a +>>action\=profile=!</a>+</a>=' $leftdiv></rex>
+		<fetch $THREADURL $ret>
+		<urllinks>
+		<$authorurl=$ret>
+		<urltext>
+		<$author=$ret>
+		<trimmer inout=$&author>
+		<if $author eq '' and ($SITEDOMAIN eq 'www.fertilityfriends.co.uk' or $SITEDOMAIN eq 'www.kneeguru.co.uk'
+			or $SITEDOMAIN eq 'www.babywhispererforums.com' or $SITEDOMAIN eq 'www.gendersupport.org' or $SITEDOMAIN eq 'www.anxietyzone.com'
+			or $SITEDOMAIN eq 'www.susans.org' or $SITEDOMAIN eq 'clubzafira.com' or $SITEDOMAIN eq 'talk.uk-yankee.com')>
+			<rex max=1 '<div=!<...+>>class\="poster"=!</h4>+</h4>=' $postdata></rex>
+			<fetch localhost/html $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+		</if>
+		<if $SITEDOMAIN eq 'forums.tmonews.com'>
+			<rex '>><h4 class\="postauthor"=!</h4>+</h4>=' $postdata>
+			<$temp = $ret>
+			<rex max=1 '<a =!<a +>>/profile/=!</a>+</a>=' $temp></rex>
+			<fetch $THREADURL $ret>
+			<urllinks>
+			<$authorurl=$ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<if $author eq ''>
+				<fetch localhost/index.html $temp>
+				<urltext>
+				<$author=$ret>
+				<trimmer inout=$&author>
+			</if>
+		</if>
+		<!-- AVATAR -->
+		<$avatarrex='<img=!<img+>>custom_avatars/avatar=!>+>=' '<img=!<img+>>class\="avatar"=!>+>='>
+		<!-- these sites have img.avatar nested in a li.avatar -->
+		<if $SITEDOMAIN eq 'www.redandwhitekop.com' or $SITEDOMAIN eq 'www.svenskamord.se'
+			or $SITEDOMAIN eq 'www.candymag.com' or $SITEDOMAIN eq 'www.esaonline.co.za' or $SITEDOMAIN eq 'www.wildfisher.co.uk'
+			or $SITEDOMAIN eq 'forums.tmonews.com' or $SITEDOMAIN eq 'www.timesharetalk.co.uk' or $SITEDOMAIN eq 'www.anxietyzone.com'
+			or $SITEDOMAIN eq 'www.gendersupport.org' or $SITEDOMAIN eq 'www.susans.org'>
+			<$avatarrex='<li=\space+>>class\="avatar"=!<img\space\P+<img\space=!>*>='>
+		</if>
+		<$reject='Themes/rawkv2/images/star\.gif' '/images/noavatar.png' '/avatars/noavatar\.gif' '/avatars/noavatar.png'>
+		<rex max=1 $avatarrex $leftdiv></rex>
+		<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl reject=$reject>
+		<!-- TITLE -->
+		<rex '>><h\digit id\="subject_=!</h+' $rightdiv>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$posttitle=$ret>
+		<trimmer inout=$&posttitle>
+		<!-- BODY -->
+		<rex '>><div\spaceclass\="post"=.+' $rightdiv>
+		<getdivs data=$ret divs=$&bodydiv>
+		<loop max=1 $bodydiv>
+			<if $SITEDOMAIN eq 'www.chevyavalancheclub.com'>
+				<rex '<div=!<...+>>class\="attachments =.+' $rightdiv>
+				<getdivs data=$ret divs=$&temp>
+				<loop max=1 $temp>
+					<gettagtextorhtml tag=$temp istext=0 textret=$&temp2>
+					<sum '%s' $bodydiv $temp2>
+					<$bodydiv = $ret>
+				</loop>
+			</if>
+			<gettagtextorhtml tag=$bodydiv istext=0 textret=$&htmlbody>
+			<gettagtextorhtml tag=$bodydiv istext=1 textret=$&postbody>
+		</loop>
+		<!-- DATE -->
+		<$daterex='on:</strong>\P=!<+' '>>\spaceskrivet:</strong>\P=!<+' '>> le:</strong>\P=!<+'
+			' am:</strong>\P=!</div+'>
+		<if $SITEDOMAIN eq 'www.blackberry.gen.tr' or $SITEDOMAIN eq 'www.vzlafta.com' or $SITEDOMAIN eq 'keskustelu.diabetes.fi'
+				or $SITEDOMAIN eq 'keskustelukanava.agronet.fi' or $SITEDOMAIN eq 'forvol.ru' or $SITEDOMAIN eq 'kroufr.ru'
+				or $SITEDOMAIN eq 'www.mandrivabrasil.org'>
+			<$daterex='>>&#171;\P=!&#187;+'>
+		</if>
+		<rex max=1 $daterex $rightdiv></rex>
+		<sandr ' &agrave; ' ' ' $ret>
+		<sandr ' um ' ' ' $ret>
+		<sandr 'kello ' ' ' $ret>
+		<sandr ' –≤ ' ' ' $ret>
+		<sandr ' ‡s ' ' ' $ret>
+		<if $LANG eq "Portuguese">
+			<sandr ' de ' ' ' $ret>
+		</if>
+		<if $SITEDOMAIN eq 'www.mvisioneros.com' or $SITEDOMAIN eq 'www.lacomunateleco.com'
+				or $SITEDOMAIN eq 'forums.tmonews.com'>
+			<rex max=1 '>><div class\="keyinfo"=!<div class\="smalltext"\P+!</div>+</div>=' $rightdiv></rex>
+			<sandr '>><strong>=!</strong>+</strong>=' '' $ret>
+		</if>
+		<if $SITEDOMAIN eq 'clubzafira.com'>
+			<rex max=1 '>><div class\="keyinfo"=!<div class\="smalltext"\P+!</div>+</div>=' $rightdiv></rex>
+			<sandr '.+>>en:' '' $ret>
+		</if>		
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$lastpostdate=$ret>
+		<trimmer inout=$&lastpostdate>
+		<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		<if $lastpostdate eq ''>
+			<rex max=1 '<div=!<div+>>on:</strong>=!</div>+</div>' $rightdiv></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$lastpostdate=$ret>
+			<trimmer inout=$&lastpostdate>
+			<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		</if>
+		<!-- SIGNATURE -->
+		<rex max=1 '>><div class\="signature"=.+' $postdata></rex>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=1 $divs>
+			<rex max=1 '>>>\P=.+' $divs></rex>
+			<$signature=$ret>
+		</loop>
+		<!-- AUTHOR SEX -->
+		<$femalerex='>>female\.gif"' '>>female\.png"'>
+		<$malerex='>>male\.gif"' '>>male\.png"'>
+		<rex max=1 $femalerex $leftdiv></rex>
+		<if $ret eq ''>
+			<rex max=1 $malerex $leftdiv></rex>
+			<if $ret neq ''>
+				<$gender='M'>
+			</if>
+		<else>
+			<$gender='F'>
+		</if>
+		<!-- AUTHOR LOC -->
+		<$locrex='>>>Yer:\P=!<+' '>>>Location:\P=!<+'>
+		<if $SITEDOMAIN eq 'www.babywhispererforums.com'>
+			<$locrex='<b>=>>Location:</b>\P=!<br+\F<br='>
+		</if>
+		<rex $locrex $leftdiv>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$authorloc=$ret>
+		<trimmer inout=$&authorloc>
+		<if $authorloc eq ''>
+			<!-- take text from image -->
+			<$locrex='>>>Country:=!>+>='>
+			<rex $locrex $leftdiv>
+			<rex max=1 '>>title\="\P=!"+' $ret></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$authorloc=$ret>
+			<trimmer inout=$&authorloc>
+		</if>
+		<if $REGISTRATIONDATEFORMATID ne '' AND $REGISTRATIONDATEFORMATID ne '0'>
+R1
+			<$authorregrex='>>Registo:\P=!<+\F<' '>>>Join Date:\P=!<+' '>><b>Joined:</b>\P=!<+'>
+			<if $SITEDOMAIN eq 'talk.uk-yankee.com'>
+				<$authorregrex='>>>Joined:\P=!<+'>
+			</if>			
+			<rex $authorregrex $postdata>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$registered=$ret>
+			<trimmer inout=$&registered>
+			<fixregdate passdate=$&registered>
+			<checkdate lang=$LANG isdateonly=1 indate=$&registered indateid=$REGISTRATIONDATEFORMATID registereddate=1>
+		</if>
+		<!-- SITEPOSTID - using anchor value by default -->
+		<loop max=1 $anchor><$sitepostid=$anchor></loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $SITEDOMAIN eq 'www.purrsinourhearts.co.uk'>
+				<!-- code for posts displayed in reverse order -->
+				<if $reversecount eq $rexloop and $stopperflag ne 1>
+					<$threadstarter=1>
+					<$stopperflag=1>
+				<else>
+					<$threadstarter=0>
+				</if>
+			<else>
+				<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+					<$threadstarter=1>
+				<else>
+					<$threadstarter=0>
+				</if>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$postbody
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=10>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod11 private textdata>
+method11
+	<domain_blocker callingmethod='11' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>	
+	<$mainrex='>><a id\="msg=!<a id\="msg+'>
+	<if $SITEDOMAIN eq 'automir.dp.ua' or $SITEDOMAIN eq 'www.cocktaildreams.de'>
+		<$mainrex='>><a name\="msg=!<a name\="msg+'>
+	<elseif $SITEDOMAIN eq 'www.go-windows.de'>
+		<$mainrex='>><a\X0Aid\="msg=!<a\X0Aid\="msg+'>
+	</if>
+	<rex row $mainrex $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<!-- cleanup -->
+		<sandr '>><span id\="gpbp_score_=!</span>+' '' $postdata>
+		<$postdata=$ret>
+		<!-- ANCHOR -->
+		<rex '>><a id\="\P=msg=\digit+' $postdata>
+		<if $ret eq ''>
+			<rex '>><a name\="\P=msg=\digit+' $postdata>
+		</if>
+		<if $SITEDOMAIN eq 'www.go-windows.de'>
+			<rex '>><a\X0Aid\="\P=msg=\digit+' $postdata>
+		</if>
+		<$anchor=$ret>
+		<!-- AUTHOR & URL-->
+A1
+		<$authorrex='<a =!<a +>>action\=profile=!</a>+</a>=' '<a =!<a +>>/profile/=!</a>+</a>=' '<a\X0A=!<a\X0A+>>/profile/=!</a>+</a>=' '<a=!<.+>>/profiel/=!</a>+</a>='>
+		<if $SITEDOMAIN eq 'forum.alternatifim.com'>
+			<$authorrex='<li=!<..+>>class\="postprofilvrh=!</li>+</li>='>
+		<elseif $SITEDOMAIN eq 'www.cocktaildreams.de'>
+			<$authorrex='<a=!<a+>>title\="Profil=!</a>+</a>='>
+		</if>
+		<rex max=1 $authorrex $postdata></rex>
+		<fetch $THREADURL $ret>
+		<urllinks>
+		<$authorurl=$ret>
+		<urltext>
+		<$author=$ret>
+		<trimmer inout=$&author>
+		<if $author eq ''>
+A2
+			<rex max=1 '>>class\="poster">\P=.+' $postdata></rex>
+			<if $SITEDOMAIN eq 'www.go-windows.de' or $SITEDOMAIN eq 'forum.leben-mit-ms.de'
+				or $SITEDOMAIN eq 'foro.tiempo.com' or $SITEDOMAIN eq 'www.portalhacker.net'
+				or $SITEDOMAIN eq 'foro.diariocritico.com'  or $SITEDOMAIN eq 'www.basso.fi'
+				or $SITEDOMAIN eq 'expressionwebforum.com' or $SITEDOMAIN eq 'forum.freenews.fr'
+				or $SITEDOMAIN eq 'www.svetecigaret.cz' or $SITEDOMAIN eq 'forum.vitalia.cz'
+				or $SITEDOMAIN eq 'forum.podnikatel.cz' or $SITEDOMAIN eq 'brzytwa.org' or $SITEDOMAIN eq 'forum.ostrow24.tv'
+				or $SITEDOMAIN eq 'forum.imoneybank.ru' or $SITEDOMAIN eq 'shopoforum.ru'
+				or $SITEDOMAIN eq 'www.hobbyconsolas.com' or $SITEDOMAIN eq 'www.myswag.org'
+				or $SITEDOMAIN eq 'forza-club.org.ua' or $SITEDOMAIN eq 'www.nuggetoutdoors.com.au' 
+				or $SITEDOMAIN eq 'www.benzobuddies.org' or $SITEDOMAIN eq 'forum.sekswoordenboek.nl'
+				or $SITEDOMAIN eq 'farmnest.com' or $SITEDOMAIN eq 'forococheselectricos.com' 
+				or $SITEDOMAIN eq 'atarnotes.com' or $SITEDOMAIN eq 'www.jeepowners.club'
+				or $SITEDOMAIN eq 'kvartiradin.ru' or $SITEDOMAIN eq 'www.forum.e-mebel.net'
+				or $SITEDOMAIN eq 'forum.girlscene.nl'>
+				<rex max=1 '>><h4=!</h4>+' $ret></rex>
+			<elseif $SITEDOMAIN eq 'www.toyota-club.com.ua'>
+				<rex max=1 '>><h4=!<+' $postdata></rex>
+			</if>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+		</if>
+		<if $author eq ''>
+A3
+			<rex max=1 '>><div class\="poster">=!</div>+</div>' $postdata></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+		</if>
+		<if $SITEDOMAIN eq 'swfloridafishingforum.com' or $SITEDOMAIN eq 'www.board-express.com'>
+			<rex '>><div class\="poster"=!</div>+' $postdata>
+			<rex max=1 '<a =!<a +>>/profile/=!</a>+</a>=' $ret></rex>
+			<fetch $THREADURL $ret>
+			<urllinks>
+			<$authorurl=$ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+		</if>
+		<if $SITEDOMAIN eq 'foros.elle.es'>
+			<rex '>><h4 class\="postauthor"=!</h4>+</h4>=' $postdata>
+			<$temp = $ret>
+			<rex max=1 '<a =!<a +>>/profile/=!</a>+</a>=' $temp></rex>
+			<fetch $THREADURL $ret>
+			<urllinks>
+			<$authorurl=$ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<if $author eq ''>
+				<fetch localhost/index.html $temp>
+				<urltext>
+				<$author=$ret>
+				<trimmer inout=$&author>
+			</if>
+		</if>
+		<if $SITEDOMAIN eq 'www.foroche.com' or $SITEDOMAIN eq 'www.forum.clubvolvoitalia.it'>
+			<rex '>><div class\="poster"=!</div>+' $postdata>
+			<rex max=1 '<a =!<a +>>action\=profile=!</a>+</a>=' $ret></rex>
+			<fetch $THREADURL $ret>
+			<urllinks>
+			<$authorurl=$ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+		</if>
+		<if $SITEDOMAIN eq 'forum.mesec.cz' or $SITEDOMAIN eq 'forums.poz.com' or $SITEDOMAIN eq 'www.oknamedia.ru'
+			or $SITEDOMAIN eq 'betonbasket.ru' or $SITEDOMAIN eq 'www.mamask.ru' or $SITEDOMAIN eq 'www.birtydastards.com'>
+			<rex max=1 '>><div class\="=floatleft ?poster"=!<h4>+<h4>\P=!</h4>+' $postdata></rex>
+			<$authblock=$ret>
+			<fetch $THREADURL $authblock>
+			<urllinks>
+			<$authorurl=$ret>
+			<fetch localhost/index.html $authblock>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+		</if>
+		<if $SITEDOMAIN eq 'rexik.zoznam.sk'>
+			<rex max=1 '<span=!<....+>>class\="name"=!<span>+<span>=' $postdata></rex>
+			<rex max=1 '>><a=!</a>+</a>=' $ret></rex>
+			<fetch $THREADURL $ret>
+			<urllinks>
+			<$authorurl=$ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+		</if>
+		<!-- AVATAR -->
+		<$avatarrex='<img=!<img+>>class\="avatar"=!>+>=' >
+		<if $SITEDOMAIN eq 'expressionwebforum.com' or $SITEDOMAIN eq 'www.captiva-club.com'>
+			<!-- above rex can make problems, since there could be class avatar inside <LI TAG-->
+			<$avatarrex='<img=!<...+>>class\="avatar"=!>+>=' >
+		<elseif $SITEDOMAIN eq 'www.forofocus.com'>
+			<!-- these sites have img.avatar nested in a li.avatar -->
+			<$avatarrex='<li=\space+>>class\="avatar"=!<img\space\P+<img\space=!>*>='>
+		<elseif $SITEDOMAIN eq 'rebenok.by' or $SITEDOMAIN eq 'dodge-club.org.ua' or $SITEDOMAIN eq 'buy-club.ru'
+				or $SITEDOMAIN eq 'forum.b-m-w.ru' or $SITEDOMAIN eq '38mama.ru'>
+			<$avatarrex='>><li class\="avatar=!</li>+'>
+		<elseif $SITEDOMAIN eq 'www.go-windows.de'>
+			<$avatarrex='>><li\X0Aclass\="avatar=!</li>+'>
+		</if>
+		<$avreject='/avatars/blank\.gif'>
+		<rex max=1 $avatarrex $postdata></rex>
+		<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl reject=$avreject>
+		<!-- TITLE -->
+		<!--#########################
+		<send $postdata>
+
+		#########################-->
+		<if $SITEDOMAIN neq 'www.basso.fi'>
+			<rex '>><h\digit id\="subject_=!</h+' $postdata>
+			<if $SITEDOMAIN eq 'automir.dp.ua'>
+				<rex max=1 '>><b class\="inthemesubject=!</b>+' $postdata></rex>
+			<elseif $SITEDOMAIN eq 'www.cocktaildreams.de'>
+				<rex max=1 '<div=!<div+>>id\="subject_=!</div>+' $postdata></rex>
+			</if>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$posttitle=$ret>
+			<trimmer inout=$&posttitle>
+		</if>
+		<!-- BODY -->
+		<$bodyrex='>><div\spaceclass\="post"=.+' '>><div\spaceclass\="post guest"=.+'>
+		<if $SITEDOMAIN eq 'rebenok.by'>
+			<$bodyrex='>><div class\="inner" id\="msg_=.+'>
+		</if>
+		<rex $bodyrex $postdata>
+		<if $SITEDOMAIN eq 'www.go-windows.de'>
+			<sandr '>><div\X0Aclass\="titlebg=!</div>+</div>=' '' $ret>
+			<sandr '>><div\X0Astyle\="margin:5px;=!</div>+</div>=' '' $ret>
+		</if>
+		<getdivs data=$ret divs=$&bodydiv>
+		<loop max=1 $bodydiv>
+			<if $SITEDOMAIN eq 'foros.elle.es' or $SITEDOMAIN eq 'www.jeepowners.club'>
+				<rex '<div=!<...+>>class\="attachments =.+' $postdata>
+				<getdivs data=$ret divs=$&temp>
+				<loop max=1 $temp>
+					<gettagtextorhtml tag=$temp istext=0 textret=$&temp2>
+					<sum '%s' $bodydiv $temp2>
+					<$bodydiv = $ret>
+				</loop>
+			</if>
+			<add_cleanup inouthtml=$&bodydiv>
+			<gettagtextorhtml tag=$bodydiv istext=0 textret=$&htmlbody>
+			<gettagtextorhtml tag=$bodydiv istext=1 textret=$&postbody>
+		</loop>
+		<!-- DATE -->
+		<$daterex= "on:</strong>\P=!<+"  "en:</strong>\P=!</div+" "am:</strong>\P=!</div+" "il:</strong>\P=!</div+">
+		<if $SITEDOMAIN eq 'www.teplos.net' or $SITEDOMAIN eq 'automir.dp.ua' or $SITEDOMAIN eq 'www.cocktaildreams.de'>
+			<$daterex='>>&#171;\P=!&#187;+'>
+		</if>
+		<rex max=1 $daterex $postdata></rex>
+		<if $ret eq '' or $SITEDOMAIN eq 'foros.elle.es' or $SITEDOMAIN eq 'www.basso.fi' or $SITEDOMAIN eq 'foro.tuning-on.com'
+			or $SITEDOMAIN eq 'hommaforum.org' or $SITEDOMAIN eq 'www.cyclingtopics.com' or $SITEDOMAIN eq 'forum.mesec.cz'
+			or $SITEDOMAIN eq 'forum.freenews.fr' or $SITEDOMAIN eq 'www.svetecigaret.cz' or $SITEDOMAIN eq 'forum.vitalia.cz'
+			or $SITEDOMAIN eq 'forum.podnikatel.cz' or $SITEDOMAIN eq 'brzytwa.org'  or $SITEDOMAIN eq 'forum.ostrow24.tv'
+			or $SITEDOMAIN eq 'www.zukiworld.com' or $SITEDOMAIN eq 'forums.poz.com' or $SITEDOMAIN eq 'www.oknamedia.ru'
+			or $SITEDOMAIN eq 'forum.imoneybank.ru' or $SITEDOMAIN eq 'www.myswag.org' or $SITEDOMAIN eq 'farmnest.com' 
+			or $SITEDOMAIN eq 'www.forum.fordmpv.com' or $SITEDOMAIN eq 'www.birtydastards.com' or $SITEDOMAIN eq 'www.chiefmotorcycleforum.com'
+			or $SITEDOMAIN eq 'gyroscopicinvesting.com' or $SITEDOMAIN eq 'forum.nasaspaceflight.com'>
+			<rex max=1 '>><div class\="keyinfo"=!<div class\="smalltext"\P+!</div>+</div>=' $postdata></rex>
+			<if $SITEDOMAIN eq 'www.basso.fi'>
+				<sandr '>>kello=' '' $ret>
+			</if>
+			<if $SITEDOMAIN eq 'forums.poz.com' or $SITEDOMAIN eq 'www.myswag.org' or $SITEDOMAIN eq 'www.forum.fordmpv.com' or $SITEDOMAIN eq 'www.benzobuddies.org'
+			or $SITEDOMAIN eq 'www.birtydastards.com' or $SITEDOMAIN eq 'forum.nasaspaceflight.com'>
+				<rex max=1 "on:</strong>\P=!</div+" $ret></rex>
+			</if>
+		</if>
+		<if $SITEDOMAIN eq 'swfloridafishingforum.com'>
+			<rex '>>&#171;\P=!&#187;+' $postdata>
+			<rex $daterex $ret>
+		<elseif $SITEDOMAIN eq 'www.foroche.com' or $SITEDOMAIN eq 'www.captiva-club.com'>
+			<rex '>><div class\="topbar_post"=!</div>+' $postdata>
+		<elseif $SITEDOMAIN eq 'forum.vatan.tc' or $SITEDOMAIN eq 'ilgiliforum.com'>
+			<rex '>><div class\="date_post"=!</div>+' $postdata>
+		<elseif $SITEDOMAIN eq 'rexik.zoznam.sk'>
+			<rex max=1 '<span=!<....+>>class\="message-date"=!</span>+</span>=' $postdata></rex>
+		</if>
+		<if $SITEDOMAIN eq 'www.svetecigaret.cz'>
+			<sandr '//' ' ' $ret>
+		<elseif $SITEDOMAIN eq 'www.thaidellclub.com'>
+			<sandr '>><strong=!</strong>+' ' ' $ret>
+			<sandr ' ‡πÄ‡∏ß‡∏•‡∏≤ ' ' ' $ret>
+			<sandr '‡∏ß‡∏±‡∏ô‡∏ô‡∏µ‡πâ' 'today' $ret>
+		</if>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<sandr ' del ' ' ' $ret>
+		<sandr ' um ' ' ' $ret>
+		<sandr ' v ' ' ' $ret>
+		<sandr ' alle ' ' ' $ret>
+		<sandr ' om ' ' ' $ret>
+		<if $LANG ne 'Thai'>
+			<sandr '\. ' '.' $ret>
+		</if>
+		<sandr '.*>>Gepost op:' '' $ret>
+		<!-- this character appears in some Russian dates and will break the translations
+			it needs a space inserted somewhere to make it 'safer' before it can be uncommented
+		<sandr 'ª' '' $ret>-->
+		<sandr ' –≤ ' ' ' $ret>
+		<sandr ' ‚ ' ' ' $ret>		
+		<$lastpostdate=$ret>
+		<trimmer inout=$&lastpostdate>
+		<if $LANG eq "Spanish">
+			<sandr '>> a las =' ' ' $lastpostdate>
+			<$lastpostdate=$ret>
+		<elseif $LANG eq 'Czech'>
+			<if $SITEDOMAIN eq 'forum.podnikatel.cz' or $SITEDOMAIN eq 'forum.mesec.cz'>
+				<rex '>>kdy:\P=.+' $lastpostdate>
+				<$lastpostdate=$ret>
+			</if>
+		<elseif $LANG eq "French">
+			<sandr ' √†' ' ' $lastpostdate>
+			<if $SITEDOMAIN eq 'forum.freenews.fr'>
+				<sandr '>>=! le: * le: =' ' ' $ret>
+			</if>
+			<$lastpostdate=$ret>
+		<elseif $LANG eq "Polish">
+			<sandr  ' o ' ' ' $ret>
+			<if $SITEDOMAIN eq 'brzytwa.org' or $SITEDOMAIN eq 'www.forum.e-mebel.net'>
+				<sandr '>>=! dnia: * dnia: =' ' ' $ret>
+			</if>
+		<elseif $LANG eq 'Russian'>
+			<if $SITEDOMAIN eq 'forza-club.org.ua'>
+				<sandr ' ‚ ' ' ' $ret>
+			</if>
+		</if>
+			<$lastpostdate=$ret>
+		<if $SITEDOMAIN eq 'forza-club.org.ua' or $SITEDOMAIN eq 'www.toyota-club.com.ua'
+			or $SITEDOMAIN eq 'forum.alternatifim.com' or $SITEDOMAIN eq 'betonbasket.ru'
+			or $SITEDOMAIN eq 'kvartiradin.ru'>
+			<sandr '.+>>#=\digit+ :=\F.+' '' $ret>
+			<$lastpostdate=$ret>
+		</if>
+		<if $SITEDOMAIN eq 'rexik.zoznam.sk'>
+			<sandr '(' '' $lastpostdate>
+			<sandr ')' '' $ret>
+			<$lastpostdate = $ret>
+			<fixdate2 inoutdate=$&lastpostdate dateformat=$TIMEFORMATID>
+		</if>
+		<if $SITEDOMAIN eq 'www.prado-club.su'>
+			<sandr '\digit\P=\space=\F\digit=' '.' $lastpostdate>
+			<$lastpostdate = $ret>
+		</if>
+		<if $SITEDOMAIN eq 'rebenok.by'>
+			<rex max=1 '>><div class\="post"=.+' $postdata></rex>
+			<rex max=1 '>><span=!</span>+' $ret></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$lastpostdate=$ret>
+			<!-- convert dd:mm:yyyy hh:mm to dd.mm.yyyy hh:mm -->
+			<sandr '>>\digit\digit\P=:=\F\digit\digit:\digit\digit\digit\digit=' '.' $lastpostdate>
+			<sandr '>>\digit\digit\.\digit\digit\P=:=\F\digit\digit\digit\digit=' '.' $ret>
+			<$lastpostdate=$ret>
+		</if>
+		<local temp>
+		<if $SITEDOMAIN eq 'www.nuggetoutdoors.com.au' or $SITEDOMAIN eq 'forum.b-m-w.ru'>
+			<rex max=1 '>>\digit\digit:\digit\digit=:\digit\digit?' $lastpostdate></rex>
+			<$temp=$ret>
+			<sandr '>>\digit\digit:\digit\digit=:\digit\digit?' '' $lastpostdate>
+			<sandr '!\digit+>>=' ' ' $ret>
+			<sum '%s' $ret $temp>
+			<$lastpostdate=$ret>
+		</if>
+
+		<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		<!-- GENDER -->
+		<rex 'images/\P=fe?male=\F\.gif"=' $postdata>
+		<lower $ret>
+		<if $ret eq 'female'>
+			<$gender="F">
+		<elseif $ret eq 'male'>
+			<$gender="M">
+		</if>
+		<if $SITEDOMAIN eq 'rexik.zoznam.sk'>
+			<rex max=1 '<img=!<...+>>class\="gender"=!>+>=' $postdata></rex>
+			<rex max=1 '>>alt\="\P=!"+' $ret></rex>
+			<if $ret eq 'girl'>
+				<$gender="F">
+			<elseif $ret eq 'boy'>
+				<$gender="M">
+			</if>
+
+		</if>
+		<!-- LOCATION -->
+		<$locrex= '>>Ubicacion: \P=!<br+' '>>>Regione:\P=!<+' '>>>Miejsce pobytu:\P=!<+' '>>>location:\P=!<+'
+			'>>>–ì–æ—Ä–æ–¥:\P=!<+' '>>>–ê–¥—Ä–µ—Å:\P=!<+' '>>>–†–µ–≥–∏–æ–Ω:\P=!<+' '>>>ŒÚÍÛ‰‡:\P=!<+'
+			'>>>–ì–æ—Ä–æ–¥/–†–∞–π–æ–Ω:\P=!<+' '>>–°—Ç—Ä–∞–Ω–∞:\P=!<img+' '>>>Region:\P=!<+' '>>Land:=!title+title\="\P=!"+'
+			'<li=!<..+>>class\="location=!</li>+</li>=' '<li=!<..+>>Location :\P=!</li>+</li>='>
+		<rex $locrex $postdata>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$authorloc=$ret>
+		<trimmer inout=$&authorloc>
+		<if $authorloc eq ''>
+			<!-- take text from image -->
+			<$locrex='>>>Country:=!>+>=' '>>>–°—Ç—Ä–∞–Ω–∞:=!>+>='>
+			<rex $locrex $postdata>
+			<rex max=1 '>>title\="\P=!"+' $ret></rex>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$authorloc=$ret>
+			<trimmer inout=$&authorloc>
+		</if>
+		<!-- AGE -->
+		<$agerex='>>>Age:\P=!<+'>
+		<rex $agerex $postdata>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$authorage=$ret>
+		<trimmer inout=$&authorage>
+		<rex '\digit+' $authorage>
+		<$authorage=$ret>
+		<!-- SIGNATURE -->
+		<rex '>><div class\="signature"=.+' $postdata>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=1 $divs>
+			<rex ">\P=.+" $divs>
+			<$signature=$ret>
+			<add_cleanup inouthtml=$&signature>
+			<trimmer inout=$&signature>
+		</loop>
+		<if $REGISTRATIONDATEFORMATID ne '' AND $REGISTRATIONDATEFORMATID ne '0'>
+			<$authorregrex='>>— Ì‡ÏË Ò:</span>\P=!<+' '>>>–ó–∞—Ä–µ–≥–∏—Å—Ç—Ä–∏—Ä–æ–≤–∞–Ω:\P=!<+' '>>reg:\P=!<li+'>
+			<rex $authorregrex $postdata>
+			<if $SITEDOMAIN eq 'gelandewagen.org'>
+				<sandr '\.' '' $ret>
+			</if>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$registered=$ret>
+			<trimmer inout=$&registered>
+			<fixregdate passdate=$&registered>
+			<checkdate lang=$LANG isdateonly=1 indate=$&registered indateid=$REGISTRATIONDATEFORMATID registereddate=1>
+		</if>
+		<!-- SITEPOSTID - using anchor value by default -->
+		<loop max=1 $anchor><$sitepostid=$anchor></loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+		<if ($SITEDOMAIN eq 'dodge-club.org.ua' or $SITEDOMAIN eq 'www.corsa-club.net' )
+		and $rexloop eq 1 and $FIRSTPAGE neq 1>
+			SKIP TS
+			<continue>
+		</if>
+		<!-- CHARSET CONVERSION -->
+                <if $CHARSETSRC ne '' and $CHARSET ne '' and $CHARSETSRC ne $CHARSET>
+			<urlutil charsetconv $htmlbody $CHARSETSRC $CHARSET>
+			<$htmlbody=$ret>
+			<urlutil charsetconv $signature $CHARSETSRC $CHARSET>
+			<$signature=$ret>
+                </if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$postbody
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=11>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+<a name=parsemethod12 private textdata>
+method12
+	<domain_blocker callingmethod='12' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '<a name=!<a name+<table=!<table+>>userinfo\.php=!userinfo\.php+' $textdata>
+		<if $next eq 1 and ($SITEDOMAIN eq 'forum.tecnozoom.it' or $SITEDOMAIN eq 'forum.tuttogratis.it')>
+			<!-- first post doesnt have an anchor before the table which messes things us -->
+			<rex '<table=!<table+>>userinfo\.php=.+' $ret>
+			<$isfirstpost=1>
+		</if>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<if $isfirstpost eq 0>
+			<!-- use this flag to prevent anchor parsing of first post, since it does not have one and will grab the wrong one -->
+			<getanchor data=$postdata>
+		</if>
+		<$isfirstpost=0>
+		<$posttable=>
+		<gettables data=$postdata tables=$&tables>
+		<loop max=1 $tables>
+			<$posttable=$tables>
+		</loop>
+		<getrows data=$posttable rows=$&rows>
+		<loop max=2 $rows>
+			<if $next eq 1>
+				<$postrow1=$rows>
+			<elseif $next eq 2>
+				<$postrow2=$rows>
+			</if>
+		</loop>
+		<getcells data=$postrow1 cells=$&cells>
+		<loop $cells>
+			<$cellnext=$next>
+			<rex ">\P=.+" $cells>
+			<$coldata=$ret>
+			<if $cellnext eq 1>
+				<rex max=1 '<a =!<a +>>userinfo.php=!</a>+</a>=' $coldata></rex>
+				<fetch $THREADURL $ret>
+				<urllinks>
+				<$authorurl=$ret>
+				<urltext>
+				<$author=$ret>
+				<trimmer inout=$&author>
+			<elseif $cellnext eq 3>
+				<fetch localhost/index.html $coldata>
+				<urltext>
+				<sandr 'Inviato il' '' $ret>
+				<$lastpostdate=$ret>
+				<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+			</if>
+		</loop>
+		<getcells data=$postrow2 cells=$&cells>
+		<loop $cells>
+			<$cellnext=$next>
+			<rex ">\P=.+" $cells>
+			<$coldata=$ret>
+			<if $cellnext eq 1>
+				<$avatarrex='<img=!<img+>>class\="avatar"=!>+>=' >
+				<rex max=1 $avatarrex $coldata></rex>
+				<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl>
+			<elseif $cellnext eq 2>
+				<getdivs data=$coldata divs=$&bodydiv>
+				<loop max=1 $bodydiv>
+					<gettagtextorhtml tag=$bodydiv istext=0 textret=$&htmlbody>
+					<gettagtextorhtml tag=$bodydiv istext=1 textret=$&postbody>
+				</loop>
+				<rex '>><div class\="signature=.+' $coldata>
+				<getdivs data=$ret divs=$&sigdiv>
+				<loop max=1 $sigdiv>
+					<gettagtextorhtml tag=$sigdiv istext=0 textret=$&signature>
+				</loop>
+				<trimmer inout=$&signature>
+			</if>
+		</loop>
+		<if $SITEDOMAIN eq 'forum.tuttogratis.it'>
+			<rex max=1 '>>id\="\P=modified_=\digit+' $postdata></rex>
+			<$anchor=$ret>
+		</if>
+		<!-- SITEPOSTID - using anchor value by default -->
+		<loop max=1 $anchor><$sitepostid=$anchor></loop>
+		<if $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=12>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod13 private textdata>
+method13
+	<domain_blocker callingmethod='13' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '>><a\spacename\="msg=!<a\spacename\="msg+' $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<$postheader=>
+		<$postcontent=>
+		<$sigcontent=>
+		<getanchor data=$postdata>
+		<$posttable=>
+		<rex max=1 '>><\!\-\-\-/ Start Header=.+' $postdata></rex>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=4 $divs>
+			<if $next eq 1>
+				<$datediv=$divs>
+			<elseif $next eq 2>
+				<$headerdiv=$divs>
+			<elseif $next eq 3>
+				<$titlediv=$divs>
+			<elseif $next eq 4>
+				<$contentdiv=$divs>
+			</if>
+		</loop>
+		<rex row '<a\space=!<a\space+>>action\=profile=!</a>+</a>' $headerdiv>
+			<$linkdata=$ret>
+			<fetch $THREADURL $linkdata>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<if $author ne "">
+				<urllinks>
+				<loop max=1 $ret>
+					<$authorurl=$ret>
+				</loop>
+				<break>
+			</if>
+		</rex>
+		<if $author eq ''>
+			<rex max=1 '>><h4>\P=!</h4>+' $headerdiv></rex>
+			<$author=$ret><!-- no active link - no author url -->
+		</if>
+		<rex max=1 '>>/Female\.gif"' $headerdiv></rex>
+		<if $ret eq ''>
+			<rex max=1 '>>/Male\.gif"' $headerdiv></rex>
+			<if $ret neq ''>
+				<$gender='M'>
+			</if>
+		<else>
+			<$gender='F'>
+		</if>
+		<rex '>><div id\="subject_=!</div>+' $titlediv>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$posttitle=$ret>
+		<trimmer inout=$&posttitle>
+		<rex '>\P=.+' $datediv>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<sandr '>>Reply \#=\digit+' '' $ret>
+		<$lastpostdate=$ret>
+		<trimmer inout=$&lastpostdate>
+		<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		<getdivs data=$contentdiv divs=$&divs>
+		<loop max=2 $divs>
+			<if $next eq 1>
+				<gettagtextorhtml tag=$divs istext=0 textret=$&htmlbody>
+				<gettagtextorhtml tag=$divs istext=1 textret=$&postbody>
+				<removequotes bodydata=$postbody bodynoquotes=$&bodynoquotes>
+			<elseif $next eq 2>
+				<rex '>><div class\="signature"=.+' $divs>
+				<getdivs data=$ret divs=$&sigdiv>
+				<loop max=1 $sigdiv><rex '>\P=.+' $sigdiv><$signature=$ret></loop>
+				<trimmer inout=$&signature>
+			</if>
+		</loop>
+		<!-- AVATAR -->
+		<$avatarrex='<img=!<img+>>class\="avatar"=!>+>=' >
+		<rex max=1 $avatarrex $postdata></rex>
+		<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl>
+		<!-- SITEPOSTID - using anchor value by default -->
+		<loop max=1 $anchor><$sitepostid=$anchor></loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=13>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod14 private textdata>
+method14
+	<domain_blocker callingmethod='14' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<rex row '>><\!\-\- Post \digit=!<\!\-\- End Post \digit+' $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<clearpostrecbuffer>
+		<$datecell=>
+		<$authorcell=>
+		<$bodycell=>
+		<getcells data=$postdata cells=$&cells>
+		<loop max=3 $cells>
+			<if $next eq 1>
+				<$datecell=$cells>
+			<elseif $next eq 2>
+				<$authorcell=$cells>
+			<elseif $next eq 3>
+				<$bodycell=$cells>
+			</if>
+		</loop>
+		<!-- ANCHOR -->
+		<rex max=1 '>>#\P=msg=\digit+' $datecell></rex>
+		<$anchor=$ret>
+		<!-- AUTHOR -->
+		<rex max=1 '>><b>\P=!</b>+' $authorcell></rex>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$author=$ret>
+		<trimmer inout=$&author>
+		<!-- TITLE -->
+		<rex '<div=!<div+>>id\="subject_=!</div>+' $bodycell>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$posttitle=$ret>
+		<trimmer inout=$&posttitle>
+		<!-- DATE -->
+		<rex '<td=!<td+>>id\="top_subject=!</td>+' $datecell>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$lastpostdate=$ret>
+		<trimmer inout=$&lastpostdate>
+		<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		<!-- BODY & SIG -->
+		<rex max=1 '>><div class\="post=.+' $bodycell></rex>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=1 $divs><rex '>\P=.+' $divs><$htmlbody=$ret></loop>
+		<fetch localhost/index.html $htmlbody>
+		<urltext>
+		<$postbody=$ret>
+		<trimmer inout=$&postbody>
+		<rex max=1 '>><div class\="signature=.+' $bodycell></rex>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=1 $divs><rex '>\P=.+' $divs><$signature=$ret></loop>
+		<!-- AVATAR -->
+		<$avatarrex='<img=!<img+>>class\="avatar"=!>+>=' >
+		<rex max=1 $avatarrex $authorcell></rex>
+		<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl>
+		<!-- SITEPOSTID - using anchor value by default -->
+		<loop max=1 $anchor><$sitepostid=$anchor></loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=14>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod15 private textdata>
+method15
+	<domain_blocker callingmethod='15' myreturn=$&stopproc>
+	<local temp>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<$rexloop=0>
+	<$rexpattern='<table=!<table+>>class\="webboard_read_post[12]=">=!class\="webboard_read_post[12]+'>
+	<rex row $rexpattern $textdata>
+		<$postdata=$ret>
+		<$rexloop=$loop>
+		<sum "%s" $postdata '</tr>'>
+		<$postdata=$ret>
+		<clearpostrecbuffer>
+		<$postrow1=>
+		<getrows data=$postdata rows=$&rows>
+		<loop max=1 $rows>
+			<$postrow1=$rows>
+		</loop>
+		<getcells data=$postrow1 cells=$&cells>
+		<loop $cells>
+			<$cellnext=$next>
+			<if $cellnext eq 1>
+				<rex row skip=1 max=1 '<a\space=!<a\space+>>action\=profile=!</a>+</a>' $cells></rex>
+				<rex row max=1 '>><a\space=!</a>+</a>=' $ret></rex>
+				<fetch $THREADURL $ret>
+				<urltext>
+				<$author=$ret>
+				<trimmer inout=$&author>
+				<if $author ne "">
+					<urllinks>
+					<$authorurl=$ret>
+				<else>
+					<rex '>><div\spaceclass\="smalltext">\P=!<div\space+' $cells>
+					<$author=$ret>
+					<trimmer inout=$&author>
+				</if>
+				<!-- AVATAR -->
+				<$avatarrex='<img=!<img+>>avatartype\==!>+>='>
+				<rex max=1 '<a\space=!<a\space+>>action\=profile=!</a>+</a>' $cells></rex>
+				<rex max=1 $avatarrex $ret></rex>
+				<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl>
+				<!--<rex '>>imgurl\=\P=.+' $avatarurl>-->
+				<$avatarurl=$ret>
+			<elseif $cellnext eq 2>
+				<!-- SITEPOSTID -->
+				<rex max=1 '>><div\spaceclass\="tools\-post">=!</div>+' $cells></rex>
+				<rex '>>action\=post;quote\=\P=!;topic\=+' $ret>
+				<$sitepostid=$ret>
+				<!-- ANCHOR -->
+				<sum '%s' 'msg' $sitepostid>
+				<$anchor=$ret>
+				<!-- POST TITLE -->
+				<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+					<rex '>><h2=!</h2>+</h2>=' $cells>
+				<else>
+					<rex '<strong\space=!<strong\space+>>\F<div\spaceclass\="date\-post">=' $cells>
+				</if>
+				<fetch localhost/index.html $ret>
+				<urltext>
+				<$posttitle=$ret>
+				<!-- POST DATE -->
+				<rex '>><span\spaceclass\="topic\-rate=!</div>+' $cells>
+				<sandr '<div\spaceid\="google\-ads">=.+' '' $ret>
+				<sandr '<style\spacetype\="text/css">=.+' '' $ret>
+				<rex "!</span>+>>=" $ret>
+				<sandr '<b>' '' $ret>
+				<sandr '</b>' '' $ret>
+				<$lastpostdate=$ret>
+				<trimmer inout=$&lastpostdate>
+				<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+				<!-- POST BODY & HTML -->
+				<rex '<div=!<div+>>class\="post">=.+' $cells>
+				<getelements name='div' data=$ret elems=$&temp>
+				<fix_multivar inout=$&temp>
+				<$bodydiv=$temp>
+				<loop max=1 $bodydiv>
+					<gettagtextorhtml tag=$bodydiv istext=0 textret=$&htmlbody>
+					<gettagtextorhtml tag=$bodydiv istext=1 textret=$&postbody>
+				</loop>
+			</if>
+		</loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+		<if $invalidfound eq 0>
+			<$rexloop=($rexloop+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 1>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=15>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+
+<a name=parsemethod16 private textdata>
+method16
+	<domain_blocker callingmethod='16' myreturn=$&stopproc>
+	<local temp tdelements authordata avatarrex>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<$rexloop=0>
+	<rex '>>id\="quickModForm"=!<table\P+<table=.+' $textdata>
+	<getelements name='table' data=$ret elems=$&temp>
+	<fix_multivar inout=$&temp>
+	<getelements name='td' data=$ret elems=$&tdelements>
+	<loop $tdelements>
+		<$postdata=$tdelements>
+		<$rexloop=$loop>
+		<$authordata=>
+		<clearpostrecbuffer>
+		<rex '<iframe=!<iframe+</iframe>=!</iframe>\F+>><img\spaceid\="my_add_button=' $postdata>
+		<if $ret neq ''>
+			<sandr '<iframe' '<a' $ret>
+			<sandr '</iframe' '</a' $ret>
+			<sandr 'src\=' 'href\=' $ret>
+			<fetch $THREADURL $ret>
+			<sleep 1 wake>
+			<urllinks>
+			<fetch $ret>
+			<$authordata=$ret>
+			<rex max=1 '>>id\="hpNickNameShort"=!<a\space\P+<a\space=!</a>+</a>=' $authordata></rex>
+			<fetch $THREADURL $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<urllinks>
+			<$authorurl=$ret>
+		<else>
+			<rex '<td=!<td+>>/avatar_guest\.jpg=!</td>+' $postdata>
+			<rex '>><div\spaceclass\="smalltext">\P=!</div>+' $ret>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+		</if>
+		<if $author eq ''>
+			<rex row skip=1 max=1 '<a\space=!<a\space+>>action\=profile=!</a>+</a>' $postdata></rex>
+			<rex row max=1 '>><a\space=!</a>+</a>=' $ret></rex>
+			<fetch $THREADURL $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+			<if $author ne "">
+				<urllinks>
+				<$authorurl=$ret>
+			<else>
+				<rex '>><div\spaceclass\="smalltext">\P=!<div\space+' $postdata>
+				<$author=$ret>
+				<trimmer inout=$&author>
+			</if>
+		</if>
+		<!-- AVATAR -->
+		<$avatarrex=
+					'>><img\space=!/>+/>='
+					'<img=!<img+>>avatartype\==!>+>='
+		>
+		<if $authordata neq ''>
+			<rex max=1 '>>id\="lblSmallAvatar"=!</span>+' $authordata></rex>
+		<else>
+			<rex max=1 '<a\space=!<a\space+>>action\=profile=!</a>+</a>' $postdata></rex>
+		</if>
+		<rex max=1 $avatarrex $ret></rex>
+		<getimagesrc htmlsrc=$ret domain=$THREADURL srcret=$&avatarurl>
+		<$avatarurl=$ret>
+		<!-- SITEPOSTID -->
+		<rex max=1 '>>id\="subject_\P=\digit+\F"=' $postdata></rex>
+		<$sitepostid=$ret>
+		<!-- ANCHOR -->
+		<sum '%s' 'msg' $sitepostid>
+		<$anchor=$ret>
+		<!-- POST TITLE -->
+		<rex max=1 '<div\space=!<div\space+>>id\="subject_=!</div>+</div>=' $postdata></rex>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$posttitle=$ret>
+		<!-- POST DATE -->
+		<rex max=1 '<td=!<td+>>id\="subject_=.+' $postdata></rex>
+		<getelements name='td' data=$ret elems=$&temp>
+		<fix_multivar inout=$&temp>
+		<rex '<b>=!>*>>‡πÄ‡∏°‡∏∑‡πà‡∏≠:</b>\P=!&#187;+' $temp>
+		<sandr '<b>' '' $ret>
+		<sandr '</b>' '' $ret>
+		<$lastpostdate=$ret>
+		<trimmer inout=$&lastpostdate>
+		<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		<!-- SIGNATURE -->
+		<rex max=1 '<td=!<td+>>class\="smalltext giveIMG"=.+' $postdata></rex>
+		<getelements name='td' data=$ret elems=$&temp>
+		<fix_multivar inout=$&temp>
+		<rex '<hr=!<hr+>>class\="hrcolor"=.+' $temp>
+		<$signature=$ret>
+		<!-- POST BODY & HTML -->
+		<rex '<div=!<div+>>class\="post giveIMG">=.+' $postdata>
+		<getelements name='div' data=$ret elems=$&temp>
+		<fix_multivar inout=$&temp>
+		<$bodydiv=$temp>
+		<loop max=1 $bodydiv>
+			<gettagtextorhtml tag=$bodydiv istext=0 textret=$&htmlbody>
+			<gettagtextorhtml tag=$bodydiv istext=1 textret=$&postbody>
+		</loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+		<if $invalidfound eq 0>
+			<$rexloop=($rexloop+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 1>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$bodynoquotes
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=16>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</loop>
+</a>
+
+<a name=parsemethod17 private textdata>
+method17
+	<local mainrex postdata rexloop bodydiv daterex>
+	<domain_blocker callingmethod='17' myreturn=$&stopproc>
+	<if $stopproc eq 1>
+		<return>
+	</if>
+	<$mainrex='<div\space=!<div\space*>>class\="message"=!class\="message"+'>
+	<rex row $mainrex $textdata>
+		<$rexloop=$loop>
+		<getelements data=$ret name='div' elems=$&postdata max=1>
+		<clearpostrecbuffer>
+		<!-- AUTHOR & URL-->
+		<rex max=1 '<a =!<a +>>action\=profile=!</a>+</a>=' $postdata></rex>
+		<fetch $THREADURL $ret>
+		<urllinks>
+		<$authorurl=$ret>
+		<urltext>
+		<$author=$ret>
+		<trimmer inout=$&author>
+		<if $author eq ''>
+			<rex max=1 '<div=!<...+>>class\="message-author=!</div>+</div>=' $postdata></rex>
+			<sandr '"">' '">' $ret>
+			<fetch localhost/index.html $ret>
+			<urltext>
+			<$author=$ret>
+			<trimmer inout=$&author>
+		</if>
+		<!-- TITLE -->
+		<rex '<a=!<a*>>class\="themelink"=!</a>+</a>=' $postdata>
+		<fetch $THREADURL $ret>
+		<urltext>
+		<$posttitle=$ret>
+		<trimmer inout=$&posttitle>
+		<!-- ANCHOR -->
+		<urllinks>
+		<rex max=1 '>>#\P=.+' $ret></rex>
+		<$anchor=$ret>
+		<!-- BODY -->
+		<rex '>><div\spaceclass\="msg"=.+' $postdata>
+		<getdivs data=$ret divs=$&bodydiv>
+		<loop max=1 $bodydiv>
+			<sandr '<div\space=!<div\space*>>class\="signature"=.+' '' $bodydiv>
+			<$bodydiv=$ret>
+		</loop>
+		<add_cleanup inouthtml=$&bodydiv>
+		<gettagtextorhtml tag=$bodydiv istext=0 textret=$&htmlbody>
+		<gettagtextorhtml tag=$bodydiv istext=1 textret=$&postbody>
+		<!-- DATE -->
+		<$daterex='>><td class\="message-user-info"=!<br+<br=!>*>='>
+		<rex max=1 $daterex $postdata></rex>
+		<fetch localhost/index.html $ret>
+		<urltext>
+		<$lastpostdate=$ret>
+		<trimmer inout=$&lastpostdate>
+		<checkdate lang=$LANG isdateonly=0 indate=$&lastpostdate indateid=$&TIMEFORMATID>
+		<!-- SIGNATURE -->
+		<rex max=1 '<div\space=!<div\space*>>class\="signature"=.+' $postdata></rex>
+		<getdivs data=$ret divs=$&divs>
+		<loop max=1 $divs>
+			<rex max=1 '>>>\P=.+' $divs></rex>
+			<$signature=$ret>
+		</loop>
+		<!-- SITEPOSTID - using anchor value by default -->
+		<loop max=1 $anchor><$sitepostid=$anchor></loop>
+		<if $anchor eq '' or $lastpostdate eq '' or $author eq '' or $htmlbody eq ''>
+			<$invalidfound=1>
+		<else>
+			<$ALLPOSTSCNT=($ALLPOSTSCNT+1)>
+		</if>
+<if $TEST_DEBUG_LOCAL eq 1>
+	<debug>
+</if>
+		<if $HASUNIQUESITEPOSTID eq 1 and $sitepostid eq '' >
+INVALID POST - SITEPOSTID REQUIRED
+		<elseif $invalidfound eq 0 and $lastpostdate gte $FORUMLASTCRAWLED and $lastpostdate gte $MAXDAYS>
+			<if $FIRSTPAGE eq 1 and $rexloop eq 0>
+				<$threadstarter=1>
+			<else>
+				<$threadstarter=0>
+			</if>
+			<insertpost threadtitle=$THREADTITLE postdate=$lastpostdate threadid=$INSERTEDTHREADID
+				forumid=$FORUMID siteid=$SITEID	urlthreadid=$URLTHREADID
+				threadurl=$THREADURL basethreadurl=$BASETHREADURL posttitle=$posttitle postbody=$postbody bodynoquotes=$postbody
+				linktosite=$LINKTOSITE hotlink=$HOTLINK
+				sitealias=$SITEALIAS siteurl=$SITEURL author=$author authorurl=$authorurl
+				anchor=$anchor authorloc=$authorloc bbstype=$BBSTYPE bbsver=$BBSVER
+				lang=$LANG cacheposts=$CACHEPOSTS forumname=$FORUMNAME
+				forumurl=$FORUMURL sitetitle=$SITETITLE htmlbody=$htmlbody charset=$CHARSET
+				age=$authorage sex=$gender gmt=$GMT adult=$ADULT country=$COUNTRY
+				threadstarter=$threadstarter signature=$signature avatarurl=$avatarurl
+				hasuniquesitepostid=$HASUNIQUESITEPOSTID feedsources=$FEEDSOURCES registered=$registered sitepostid=$sitepostid
+				sitetopic=$SITETOPIC forumtopics=$FORUMTOPICS forumcategories=$FORUMCATEGORIES
+				providerid=$PROVIDERID
+				inserted=$&inserted invalidfound=$&invalidfound>
+******************************************
+			<if $inserted eq 1>
+				<$PARSEMETHOD=17>
+				<$POSTSCNT=($POSTSCNT+1)>
+			<else>
+				<$DUPSFOUND=1>
+			</if>
+			<$POSTSPARSED=1>
+		<elseif $lastpostdate lt $FORUMLASTCRAWLED>
+			<if $invalidfound eq 0>
+				<$POSTSPARSED=1>
+			</if>
+		</if>
+-----------------------------------
+	</rex>
+</a>
+<!-------------------------------------------------------------------------
+--------------------------------------------------------------------------->
+<a name=getanchor private data>
+	<!--clean carriage returns, added By Tamer 06/01/04-->
+	<$newline = "\n" "\r">
+	<$replacement = "" "">
+	<sandr $newline $replacement $data>
+	<$data = $ret>
+	<rex row max=1 ">><a=\space+name\=\P=!>*\F>" $data></rex>
+	<sandr '"' '' $ret>
+	<$anchor=$ret>
+	<trimmer inout=$&anchor>
+</a>
+
+<!-------------------------------------------------------------------------
+--------------------------------------------------------------------------->
+<a name=getauthorurl private>
+	<$rexauthorurl="action\=profile">
+	<urllinks>
+	<$links=$ret>
+	<loop $links>
+		<rex $rexauthorurl $links>
+		<if $ret ne "">
+			<$authorurl=$links>
+			<break>
+		</if>
+	</loop>
+</a>
+
+<!-------------------------------------------------------------------------
+--------------------------------------------------------------------------->
+<a name=getbody private celldata>
+<$bodyends =
+			 ">>>\P=!________________*\F________________"
+			 ">>>\P=!__________________*\F__________________"
+			 ">>>\P=!_____________________________*\F_____________________________"
+			 ">>>\P=!Report\spacethis\spacepost*\FReport\spacethis\spacepost"
+			 ">>>\P=!Meld\spacedeze\spacepost*\FMeld\spacedeze\spacepost"
+			 ">>>\P=!\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-*\F\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-"
+			 ">>>\P=!\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-*\F\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-"
+>
+	<$bodyendfound=0>
+	<loop $bodyends>
+		<rex $bodyends $celldata>
+		<$rexret=$ret>
+		<if $rexret ne "">
+			<$fetchcol=$rexret>
+			<$bodyendfound=1>
+			<break>
+		</if>
+	</loop>
+	<if $bodyendfound eq 0>
+		<rex row ">>>\P=.+" $celldata>
+			<if $next eq 1>
+				<$fetchcol=$ret>
+			</if>
+		</rex>
+	</if>
+	<$htmlbody=$fetchcol>
+	<fetch localhost/index.html $htmlbody>
+	<$bodydata=$ret>
+	<urltext>
+	<$postbody=$ret>
+	<removequotes bodydata=$bodydata bodynoquotes=$&bodynoquotes>
+</a>
+
+<a name=clearpostrecbuffer private>
+	<$author=>
+	<$authorurl=>
+	<$posttitle=>
+	<$lastpostdate=>
+	<$postbody=>
+	<$bodynoquotes=>
+	<$anchor=>
+	<$authorloc=>
+	<$gender=>
+	<$authorage=>
+	<$invalidfound=0>
+	<$htmlbody=>
+	<$signature=>
+	<$sitepostid=>
+	<$registered=>
+	<$recommendation=>
+	<$avatarurl=>
+</a>
+
+
+<a name=debug2>
+	threadstarter: $threadstarter
+	lastpostdate: $lastpostdate
+	author: $author
+	authorurl: <fmt "%s\r\n" $authorurl>
+	avatarurl: <fmt "%s\r\n" $avatarurl>
+	anchor:$anchor
+	sitepostid: $sitepostid
+	postbody: <fmt "%s\r\n" $postbody>
+	<!--htmlbody: <fmt "\r\n%s\r\n" $htmlbody>-->
+	signature: <fmt "%s\r\n" $signature>
+</a>
+
+<a name=debug>
+	-------------------------------------------
+	<br>
+	author: $author
+	<br>
+	lastpostdate: $lastpostdate
+	<br>
+	posttitle: $posttitle
+	<br>
+	postbody:$postbody
+	<br>
+	signature:<send $signature>
+
+	<br>
+	anchor:$anchor
+	<br>
+	sitepostid: $sitepostid
+	<br>
+	authorloc:$authorloc
+	<br>
+	authorurl:$authorurl
+	<br>
+	avatarurl:$avatarurl
+	<br>
+	registered: $registered
+	<br>
+	gender:$gender
+	<br>
+	age:$authorage
+	<br>
+	recommendation:$recommendation
+	<br>
+	invalidfound:$invalidfound
+	<br>
+	-------------------------------------------
+</a>
+
+<a name=fixdate private inoutdate>
+	<rex '\digit+H\space=\digit+mn\space=' $inoutdate>
+	<if $ret ne "">
+		<sandr 'H\space=' ':' $inoutdate>
+		<sandr 'mn\space=.+' '' $ret>
+		<$inoutdate=$ret>
+	</if>
+	<if $SITEDOMAIN eq 'forum.toyota-allion.ru'>
+		<sandr 'Úˇ·ˇ' '' $inoutdate>
+		<sandr 'ˇ' '' $ret>
+		<$inoutdate=$ret>
+	</if>
+	<if $SITEDOMAIN eq 'www.kostky.org' or $SITEDOMAIN eq 'diskuse.elektrika.cz'>
+		<sandr '\spacev\space' ' ' $inoutdate>
+		<sandr '\xBB' '' $ret>
+		<sandr '\x3F' '' $ret>
+		<sandr '\xC2' '' $ret>
+		<$inoutdate=$ret>
+	</if>
+</a>
+<a name=fixdate2 private inoutdate dateformat>
+	<local change oldInOutDate timePart>
+	<$oldInOutDate = $inoutdate>
+	<if $LANG eq "Slovak">
+		<$change = 1>
+		<rex 'V pondelok' $inoutdate>
+		<if $ret neq ''>
+			<$inoutdate = 'Last Monday'>
+		<else>
+			<rex 'V utorok' $inoutdate>
+			<if $ret neq ''>
+				<$inoutdate = 'Last Tuesday'>
+			<else>
+				<rex 'V stredu' $inoutdate>
+				<if $ret neq ''>
+					<$inoutdate = 'Last Wednesday'>
+				<else>
+					<rex 'V ≈°tvrtok' $inoutdate>
+					<if $ret neq ''>
+						<$inoutdate = 'Last Thursday'>
+					<else>
+						<rex 'V piatok' $inoutdate>
+						<if $ret neq ''>
+							<$inoutdate = 'Last Friday'>
+						<else>
+							<rex 'V sobotu' $inoutdate>
+							<if $ret neq ''>
+								<$inoutdate = 'Last Saturday'>
+							<else>
+								<rex 'V nedeƒæu' $inoutdate>
+								<if $ret neq ''>
+									<$inoutdate = 'Last Sunday'>
+								<else>
+									<$change = 0>
+								</if>
+							</if>
+						</if>
+					</if>
+				</if>
+			</if>
+		</if>
+	</if>
+	<if $change eq 1>
+CHANGE HAPPEN($oldInOutDate, $dateformat)
+                <$inoutdate=(convert($inoutdate, 'date'))>
+new date: $inoutdate
+		<if $dateformat eq "10003">
+			<strfmt '%d.%m.%Y %H:%M:%S' $inoutdate>
+			<$inoutdate=$ret>
+		</if>
+FORMATTED new date: $inoutdate
+		<rex max=1 '\digit+:=\digit+:?\digit*' $oldInOutDate></rex>
+		<$timePart = $ret>
+		<if $timePart neq ''>
+			<sandr '\digit+:=\digit+:?\digit*' $timePart $inoutdate>
+			<$inoutdate = $ret>
+		</if>
+	</if>
+</a>
+
+<a name=fixregdate private passdate>
+	<if $REGISTRATIONDATEFORMATID eq '10005'>
+		<!-- first check if date already includes the day -->
+		<rex '\alpha\space=\digit+\,?\space=\digit+' $passdate>
+		<if $ret eq ''>
+			<!-- locate the year -->
+			<rex '\digit\digit\digit\digit' $passdate>
+			<$holdyear=$ret>
+			<strfmt "%s%s" '01 ' $holdyear>
+			<!-- repalce the year with the string consisting of the day and year -->
+			<sandr $holdyear $ret $passdate>
+			<$passdate=$ret>
+		</if>
+	</if>
+	<if $SITEDOMAIN eq 'www.forumfotografia.net'>
+		<!-- no date format exists for this format (mm/yyyy), convert it to mm/dd/yyyy -->
+		<rex '\digit/\digit' $passdate>
+		<if $ret ne ''>
+			<sandr '/' '/01/' $passdate>
+			<$passdate=$ret>
+		</if>
+	</if>
+	<if $SITEDOMAIN eq 'www.chevyavalancheclub.com'>
+			<sandr '\.' '/' $passdate>
+			<$passdate=$ret>
+	</if>
+	<if $SITEDOMAIN eq 'talk.uk-yankee.com'>
+			<sum '%s' '01 ' $passdate>
+			<$passdate=$ret>
+	</if>
+</a>
+
+<a name=add_cleanup private inouthtml>
+	<if $SITEDOMAIN eq 'www.cyclingtopics.com' or $SITEDOMAIN eq 'www.satellite-audiovideo.com'>
+		<sandr '>>You are not allowed to view links=!">Login</a>+">Login</a>=' '' $inouthtml>
+		<$inouthtml=$ret>
+	</if>
+	<if $SITEDOMAIN eq 'www.helpwebhosting.com' or $SITEDOMAIN eq 'chevysonic-club.com'>
+		<sandr '>><div class\="sharethis_=.+' '' $inouthtml>
+		<$inouthtml=$ret>
+	</if>
+	<if $SITEDOMAIN eq 'forum.pravda.com.ua'>
+		<sandr '<em=!<em+>>>–û—Å—Ç–∞–Ω–Ω—î —Ä–µ–¥–∞–≥—É–≤–∞–Ω–Ω—è:=!</em>+</em>=' '' $inouthtml>
+		<$inouthtml=$ret>
+	</if>
+</a>
+
+<a name=domain_blocker private callingmethod myreturn>
+	<!-- has effect in debug mode only - prevent certain parse-methods to process certain websites (domains).
+	useful in test/debug mode to determine the best method for parsing.
+	In normal mode the variable values should always be blank so this fn doesn't have effect. -->
+	<$myreturn=0>
+	<$thismethod=''>
+	<$thisdomain=''>
+	<loop $thismethod>
+		<if $thismethod eq $callingmethod>
+			<if $SITEDOMAIN	eq $thisdomain>
+				<$myreturn=1>
+			</if>
+		</if>
+	</loop>
+</a>
+</script>
+
+
+
+
