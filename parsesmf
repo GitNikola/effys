@@ -172,7 +172,6 @@ Program was Created by:
 		or $SITEDOMAIN eq 'baby.dn.ua' or $SITEDOMAIN eq 'deti74.ru' or $SITEDOMAIN eq 'www.konura.info'
 		or $SITEDOMAIN eq 'youngparents.msk.ru' or $SITEDOMAIN eq 'gripevines.com'
 		or $SITEDOMAIN eq 'www.skodacroatia.com' or $SITEDOMAIN eq 'www.nmwl.no' or $SITEDOMAIN eq 'syktforum.ru'
-		or $SITEDOMAIN eq 'hlebopechka.ru' or $SITEDOMAIN eq 'www.teknikportal.com' or $SITEDOMAIN eq 'www.thaithinkpad.com'>
 		or $SITEDOMAIN eq 'hlebopechka.ru' or $SITEDOMAIN eq 'www.teknikportal.com' or $SITEDOMAIN eq 'www.thaithinkpad.com'
 		or $SITEDOMAIN eq 'reader-test.sr'>
 		<parsemethod6 textdata=$THREADBODY>
